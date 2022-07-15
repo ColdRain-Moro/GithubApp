@@ -6,9 +6,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.PersistableBundle
 import androidx.annotation.CallSuper
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -44,6 +47,22 @@ abstract class BaseActivity(
         val windowInsetsController = ViewCompat.getWindowInsetsController(decorView)
         windowInsetsController?.isAppearanceLightStatusBars = true
         window.statusBarColor = Color.TRANSPARENT
+    }
+
+    /**
+     * 替换 Fragment 的正确用法。
+     * 如果不按照正确方式使用，会造成 ViewModel 失效，
+     * 你可以写个 demo 看看在屏幕翻转后 Fragment 的 ViewModel 的 hashcode() 值是不是同一个
+     */
+    protected inline fun <reified F : Fragment> replaceFragment(@IdRes id: Int, func: () -> F): F {
+        var fragment = supportFragmentManager.findFragmentById(id)
+        if (fragment !is F) {
+            fragment = func.invoke()
+            supportFragmentManager.commit {
+                replace(id, fragment)
+            }
+        }
+        return fragment
     }
 
     /**

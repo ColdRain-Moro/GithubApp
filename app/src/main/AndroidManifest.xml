@@ -3,8 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="kim.bifrost.github">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+
     <application
         android:allowBackup="true"
+        android:name=".GitHubApp"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -14,13 +18,26 @@
         android:theme="@style/Theme.SummerExamine"
         tools:targetApi="31">
         <activity
-            android:name="kim.bifrost.github.MainActivity"
-            android:exported="true">
+            android:name=".view.activity.LoginActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="login"
+                    android:scheme="githubapp"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.activity.MainActivity"
+            android:exported="true">
         </activity>
     </application>
 

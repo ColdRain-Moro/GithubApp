@@ -18,7 +18,7 @@ object Config {
         }
     }
 
-    private const val baseAppId = "kim.bifrost.github"
+    private const val baseAppId = "kim.bifrost.rain.github"
     const val versionCode = 1
     const val versionName = "1.0.0"
     const val targetSdk = 31

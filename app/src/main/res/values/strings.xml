@@ -1,3 +1,21 @@
 <resources>
-    <string name="app_name">SummerExamine</string>
+    <string name="app_name">GithubApp</string>
+    <string name="login_with_browser">LOGIN WITH BROWSER</string>
+    <string name="why_use_oath">Github官方已于 November 13, 2020 删除了Authorizations API, 所以现在只支持通过浏览器OAuth登录</string>
+    <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
+    <string name="notifications">Notifications</string>
+    <string name="news">News</string>
+    <string name="issues">Issues</string>
+    <string name="my_repos">My repos</string>
+    <string name="stars">Stars</string>
+    <string name="repositories">Repositories</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="search">Search</string>
+    <string name="trace">Trace</string>
+    <string name="trending_repos">Trending repos</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+    <string name="rain">Rain</string>
+    <string name="rookie_android_dev">rookie android dev</string>
 </resources>

@@ -1,6 +1,9 @@
 package kim.bifrost.lib_common.ui
 
+import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.LayoutInflater
+import androidx.annotation.CallSuper
 import androidx.viewbinding.ViewBinding
 import kim.bifrost.lib_common.extensions.getGenericClassFromSuperClass
 import kim.bifrost.lib_common.extensions.lazyUnlock
@@ -21,6 +24,12 @@ abstract class BaseBindActivity<VB: ViewBinding>(
         getGenericClassFromSuperClass<VB, ViewBinding>(javaClass)
             .getMethod("inflate", LayoutInflater::class.java)
             .invoke(null, layoutInflater) as VB
+    }
+
+    @CallSuper
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        super.setContentView(binding.root)
     }
 
     @Deprecated(

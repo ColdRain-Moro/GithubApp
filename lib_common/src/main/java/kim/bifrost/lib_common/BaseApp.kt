@@ -11,7 +11,7 @@ import androidx.annotation.CallSuper
  * @author 寒雨
  * @since 2022/7/13 23:10
  */
-class BaseApp : Application() {
+open class BaseApp : Application() {
     @CallSuper
     override fun onCreate() {
         super.onCreate()

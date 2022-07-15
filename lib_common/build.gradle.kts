@@ -1,6 +1,4 @@
-import kim.bifrost.build_logic.dependency.dependAndroidKtx
-import kim.bifrost.build_logic.dependency.dependCoroutines
-import kim.bifrost.build_logic.dependency.dependLifecycleKtx
+import kim.bifrost.build_logic.dependency.*
 
 plugins {
     id("lib-module")
@@ -9,3 +7,4 @@ plugins {
 dependCoroutines()
 dependLifecycleKtx()
 dependAndroidKtx()
+dependNetwork()

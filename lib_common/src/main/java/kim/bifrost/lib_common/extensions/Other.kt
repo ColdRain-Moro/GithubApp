@@ -39,3 +39,6 @@ val Int.drawable: Drawable
 
 val Int.dimen: Float
   get() = BaseApp.appContext.resources.getDimension(this)
+
+val TAG: String
+  get() = Throwable().stackTrace[0].className

@@ -3,8 +3,7 @@ package kim.bifrost.github.view.fragment
 import android.os.Bundle
 import android.view.View
 import kim.bifrost.github.databinding.FragmentSplashBinding
-import kim.bifrost.lib_common.ui.BaseBindFragment
-import kim.bifrost.lib_common.ui.BaseFragment
+import kim.bifrost.lib_common.base.ui.BaseBindFragment
 
 /**
  * kim.bifrost.github.view.fragment.SplashFragment

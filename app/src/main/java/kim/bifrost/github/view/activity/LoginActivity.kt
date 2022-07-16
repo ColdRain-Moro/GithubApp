@@ -15,9 +15,8 @@ import kim.bifrost.github.user.UserManager
 import kim.bifrost.github.view.fragment.SplashFragment
 import kim.bifrost.github.view.viewmodel.LoginViewModel
 import kim.bifrost.lib_common.extensions.*
-import kim.bifrost.lib_common.ui.mvvm.BaseVmBindActivity
+import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindActivity
 import kotlinx.coroutines.launch
-import java.util.*
 
 class LoginActivity : BaseVmBindActivity<LoginViewModel, ActivityLoginBinding>() {
 
@@ -70,6 +69,7 @@ class LoginActivity : BaseVmBindActivity<LoginViewModel, ActivityLoginBinding>()
                         binding.splashScreen.gone()
                         // 已经登录就直接进入
                         if (UserManager.authTokenData != null) {
+                            Log.d(TAG, "onCreate: ${UserManager.authTokenData!!.accessToken}")
                             MainActivity.start(this@LoginActivity)
                             finish()
                         }

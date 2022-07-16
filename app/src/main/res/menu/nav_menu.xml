@@ -39,7 +39,7 @@
 
     <group
         android:id="@+id/repositories"
-        android:checkableBehavior="single">
+        android:checkableBehavior="none">
         <item
             android:id="@+id/nav_owned"
             android:icon="@drawable/ic_menu_repo"
@@ -56,7 +56,7 @@
 
     <group
         android:id="@+id/search"
-        android:checkableBehavior="single">
+        android:checkableBehavior="none">
         <item
             android:id="@+id/nav_search"
             android:checkable="false"

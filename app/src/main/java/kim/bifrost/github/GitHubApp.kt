@@ -9,4 +9,8 @@ import kim.bifrost.lib_common.BaseApp
  * @author 寒雨
  * @since 2022/7/14 14:28
  */
-class GitHubApp : BaseApp()
+class GitHubApp : BaseApp() {
+    override fun onCreate() {
+        super.onCreate()
+    }
+}

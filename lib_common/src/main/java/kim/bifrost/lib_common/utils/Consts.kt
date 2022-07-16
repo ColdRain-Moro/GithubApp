@@ -15,3 +15,4 @@ const val APP_CLIENT_ID = "Iv1.db596c9b4e9b0447"
 const val APP_CLIENT_SECRET = "50bd4e4a84804cbd72d73adefaaa98829d2ceea2"
 
 const val OAUTH_TOKEN_DATA = "oauth_token_data"
+const val USER_TEMP = "user_temp"

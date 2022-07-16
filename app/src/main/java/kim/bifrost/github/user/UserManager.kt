@@ -2,17 +2,17 @@ package kim.bifrost.github.user
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.net.Uri
 import androidx.core.content.edit
-import kim.bifrost.github.network.model.OAuthToken
+import kim.bifrost.github.repository.network.model.OAuthToken
+import kim.bifrost.github.repository.network.model.User
 import kim.bifrost.lib_common.extensions.defaultSp
 import kim.bifrost.lib_common.extensions.fromJson
 import kim.bifrost.lib_common.extensions.toJson
 import kim.bifrost.lib_common.utils.APP_CLIENT_ID
 import kim.bifrost.lib_common.utils.OAUTH2_URL
 import kim.bifrost.lib_common.utils.OAUTH_TOKEN_DATA
+import kim.bifrost.lib_common.utils.USER_TEMP
 import java.util.*
 
 /**
@@ -33,6 +33,18 @@ object UserManager {
         set(value) {
             field = value
             defaultSp.edit { putString(OAUTH_TOKEN_DATA, value?.toJson()) }
+        }
+
+    var userTemp: User? = null
+        get() {
+            if (field == null) {
+                field = defaultSp.getString(USER_TEMP, null)?.fromJson()
+            }
+            return field
+        }
+        set(value) {
+            field = value
+            defaultSp.edit(commit = true) { putString(USER_TEMP, value?.toJson()) }
         }
 
     fun openOAuth2Page(context: Context) {

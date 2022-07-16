@@ -1,15 +1,20 @@
 package kim.bifrost.github.view.viewmodel
 
-import android.content.Context
+import android.util.Log
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.google.android.material.tabs.TabLayout
-import kim.bifrost.github.network.api.UserService
+import kim.bifrost.github.repository.network.api.UserService
+import kim.bifrost.github.repository.network.model.User
 import kim.bifrost.github.user.UserManager
 import kim.bifrost.github.view.activity.LoginActivity
 import kim.bifrost.github.view.activity.MainActivity
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
+import kim.bifrost.lib_common.extensions.TAG
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 /**
  * kim.bifrost.github.view.viewmodel.MainViewModel
@@ -21,9 +26,14 @@ import kotlinx.coroutines.flow.SharedFlow
 class MainViewModel : ViewModel() {
     private val _toolbarBus = MutableSharedFlow<Toolbar.() -> Unit>()
     private val _tabLayoutBus = MutableSharedFlow<TabLayout.() -> Unit>()
+    private val _user = MutableStateFlow<User?>(null)
 
-    val toolbarBus: SharedFlow<Toolbar.() -> Unit> = _toolbarBus
-    val tabLayoutBus: SharedFlow<TabLayout.() -> Unit> = _tabLayoutBus
+    val toolbarBus: SharedFlow<Toolbar.() -> Unit>
+        get() = _toolbarBus
+    val tabLayoutBus: SharedFlow<TabLayout.() -> Unit>
+        get() = _tabLayoutBus
+    val user: StateFlow<User?>
+        get() = _user
 
     suspend fun dispatchToolbarChange(event: Toolbar.() -> Unit) {
         _toolbarBus.emit(event)
@@ -33,10 +43,15 @@ class MainViewModel : ViewModel() {
         _tabLayoutBus.emit(event)
     }
 
-    suspend fun getSelf() = UserService.getMe()
+    fun getSelf() {
+        viewModelScope.launch {
+            _user.value = UserService.getMe()
+        }
+    }
 
     fun logout(activity: MainActivity) {
         UserManager.authTokenData = null
+        UserManager.userTemp = null
         LoginActivity.start(activity)
         activity.finish()
     }

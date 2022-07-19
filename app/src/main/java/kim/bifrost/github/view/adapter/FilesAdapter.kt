@@ -10,6 +10,7 @@ import kim.bifrost.github.R
 import kim.bifrost.github.databinding.ItemFileBinding
 import kim.bifrost.github.repository.network.model.RepoFile
 import kim.bifrost.lib_common.extensions.gone
+import kim.bifrost.lib_common.extensions.visible
 
 /**
  * kim.bifrost.github.view.adapter.FilesAdapter
@@ -22,6 +23,9 @@ class FilesAdapter(private val onClick: RepoFile.() -> Unit) : ListAdapter<RepoF
     inner class Holder(val binding: ItemFileBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
+                if (layoutPosition == -1) {
+                    return@setOnClickListener
+                }
                 val data = getItem(layoutPosition)!!
                 data.onClick()
             }
@@ -42,6 +46,7 @@ class FilesAdapter(private val onClick: RepoFile.() -> Unit) : ListAdapter<RepoF
                         .load(R.drawable.ic_file)
                         .into(ivFile)
                     tvFileSize.text = item.size.calculateFileSize()
+                    tvFileSize.visible()
                 }
                 RepoFile.Type.DIRECTORY -> {
                     Glide.with(ivFile)

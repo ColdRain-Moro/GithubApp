@@ -50,6 +50,12 @@
         <activity android:name=".view.activity.RepositoryActivity"
             android:exported="true">
         </activity>
+        <activity android:name=".view.activity.WebActivity"
+            android:exported="true">
+        </activity>
+        <activity android:name=".view.activity.IssuesActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

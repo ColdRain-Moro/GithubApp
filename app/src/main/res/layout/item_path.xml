@@ -2,8 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:padding="10dp"
-    android:layout_height="wrap_content">
+    android:paddingStart="10dp"
+    android:paddingVertical="10dp"
+    android:layout_height="wrap_content"
+    tools:ignore="RtlSymmetry">
     <TextView
         android:id="@+id/tv_path"
         android:layout_width="wrap_content"

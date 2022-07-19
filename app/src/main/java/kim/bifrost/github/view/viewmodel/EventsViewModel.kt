@@ -6,6 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import kim.bifrost.github.repository.network.pagingsource.NewsPagingSource
+import kim.bifrost.github.repository.network.pagingsource.RepositoryEventsPagingSource
 import kim.bifrost.github.repository.network.pagingsource.UserProfilePagingSource
 import kim.bifrost.github.view.fragment.EventsFragment
 
@@ -32,7 +33,7 @@ class EventsViewModel(
                 when (type) {
                     EventsFragment.SourceType.NEWS -> NewsPagingSource(user!!)
                     EventsFragment.SourceType.USER -> UserProfilePagingSource(user!!)
-                    EventsFragment.SourceType.REPO -> TODO()
+                    EventsFragment.SourceType.REPO -> RepositoryEventsPagingSource(user!!, repo!!)
                 }
             }
         ).flow.cachedIn(viewModelScope)

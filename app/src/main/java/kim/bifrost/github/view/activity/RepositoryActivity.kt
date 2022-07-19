@@ -10,6 +10,8 @@ import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import kim.bifrost.github.databinding.ActivityRepoBinding
 import kim.bifrost.github.repository.network.model.Repository
+import kim.bifrost.github.view.fragment.CommitFragment
+import kim.bifrost.github.view.fragment.EventsFragment
 import kim.bifrost.github.view.fragment.FilesFragment
 import kim.bifrost.github.view.fragment.RepoInfoFragment
 import kim.bifrost.github.view.viewmodel.RepoViewModel
@@ -53,6 +55,8 @@ class RepositoryActivity : BaseVmBindActivity<RepoViewModel, ActivityRepoBinding
                 return@BaseVPAdapter when (i) {
                     0 -> RepoInfoFragment.newInstance()
                     1 -> FilesFragment.newInstance(repo.owner.login, repo.name)
+                    2 -> CommitFragment.newInstance(repo)
+                    3 -> EventsFragment.newInstance(EventsFragment.SourceType.REPO, repo.owner.login, repo.name)
                     else -> Fragment()
                 }
             }

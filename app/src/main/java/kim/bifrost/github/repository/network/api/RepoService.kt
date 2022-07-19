@@ -1,13 +1,11 @@
 package kim.bifrost.github.repository.network.api
 
 import kim.bifrost.github.repository.network.RetrofitHelper
-import kim.bifrost.github.repository.network.model.LanguageColorResp
-import kim.bifrost.github.repository.network.model.RepoFile
-import kim.bifrost.github.repository.network.model.Repository
-import kim.bifrost.github.repository.network.model.User
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import kim.bifrost.github.repository.network.model.*
+import kim.bifrost.github.repository.network.model.event.Event
+import okhttp3.ResponseBody
+import retrofit2.Response
+import retrofit2.http.*
 
 /**
  * kim.bifrost.github.repository.network.api.RepoService
@@ -112,7 +110,7 @@ interface RepoService {
      * @param branch
      * @return
      */
-    @GET("repos/{owner}/{repo}/contents/{path}")
+    @GET("/repos/{owner}/{repo}/contents/{path}")
     suspend fun getRepoFiles(
         @Path("owner") owner: String,
         @Path("repo") repo: String,
@@ -120,6 +118,72 @@ interface RepoService {
         @Query("ref") branch: String? = null,
     ): List<RepoFile>
 
+    /**
+     * 以HTML格式获取文件内容
+     *
+     * @param url
+     * @return
+     */
+    @GET
+    @Headers("Accept: application/vnd.github.html")
+    suspend fun getFileAsHtmlStream(
+        @Url url: String
+    ): Response<ResponseBody>
+
+    /**
+     * 以raw格式获取文件内容
+     *
+     * @param url
+     * @return
+     */
+    @GET
+    @Headers("Accept: application/vnd.github.VERSION.raw")
+    suspend fun getFileAsRawStream(
+        @Url url: String
+    ): Response<ResponseBody>
+
+    /**
+     * 获取仓库commit
+     *
+     * @param owner
+     * @param repo
+     * @param branch SHA or branch to start listing commits from. Default: the repository’s default branch (usually master).
+     * @param page
+     * @param perPage
+     * @return
+     */
+    @GET("/repos/{owner}/{repo}/commits")
+    suspend fun getRepoCommits(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Query("sha") branch: String? = null,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int,
+    ): List<Commit>
+
+    /**
+     * 获取仓库事件
+     *
+     * @param owner
+     * @param repo
+     * @param page
+     * @param perPage
+     * @return
+     */
+    @GET("/repos/{owner}/{repo}/events")
+    suspend fun getRepositoryEvents(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int,
+    ): List<Event>
+
+    /**
+     * 获取语言对应颜色
+     *
+     * @param lang
+     * @return
+     */
     @GET("http://42.192.196.215:8082/lang/color")
     suspend fun getLanguageColor(
         @Query("lang") lang: String

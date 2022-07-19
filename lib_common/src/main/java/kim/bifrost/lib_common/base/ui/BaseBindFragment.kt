@@ -36,13 +36,16 @@ abstract class BaseBindFragment<VB : ViewBinding> : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val method = getGenericClassFromSuperClass<VB, ViewBinding>(javaClass).getMethod(
-            "inflate",
-            LayoutInflater::class.java,
-            ViewGroup::class.java,
-            Boolean::class.java
-        )
-        _binding = method.invoke(null, inflater, container, false) as VB
+        super.onCreateView(inflater, container, savedInstanceState)
+        if (_binding == null) {
+            val method = getGenericClassFromSuperClass<VB, ViewBinding>(javaClass).getMethod(
+                "inflate",
+                LayoutInflater::class.java,
+                ViewGroup::class.java,
+                Boolean::class.java
+            )
+            _binding = method.invoke(null, inflater, container, false) as VB
+        }
         onCreateViewBefore(container, savedInstanceState)
         return binding.root
     }

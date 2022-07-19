@@ -23,7 +23,7 @@ data class User(
     val blog: String,
     val location: String,
     val email: String,
-    val bio: String,
+    val bio: String?,
     @SerializedName("public_repos")
     val publicRepos: Int,
     @SerializedName("public_gists")

@@ -1,7 +1,11 @@
 package kim.bifrost.github.repository.network.model
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
+import java.io.Serializable
+import java.util.*
 
 data class Repository(
     @SerializedName("allow_auto_merge")
@@ -37,7 +41,7 @@ data class Repository(
     @SerializedName("contributors_url")
     val contributorsUrl: String,
     @SerializedName("created_at")
-    val createdAt: String,
+    val createdAt: Date,
     @SerializedName("default_branch")
     val defaultBranch: String,
     @SerializedName("delete_branch_on_merge")
@@ -133,7 +137,7 @@ data class Repository(
     @SerializedName("pulls_url")
     val pullsUrl: String,
     @SerializedName("pushed_at")
-    val pushedAt: String,
+    val pushedAt: Date,
     @SerializedName("releases_url")
     val releasesUrl: String,
     @SerializedName("size")
@@ -160,14 +164,14 @@ data class Repository(
     val teamsUrl: String,
     @SerializedName("temp_clone_token")
     val tempCloneToken: String,
-    @SerializedName("template_repository")
-    val templateRepository: Any,
+//    @SerializedName("template_repository")
+//    val templateRepository: Any,
     @SerializedName("topics")
     val topics: List<String>,
     @SerializedName("trees_url")
     val treesUrl: String,
     @SerializedName("updated_at")
-    val updatedAt: String,
+    val updatedAt: Date,
     @SerializedName("url")
     val url: String,
     @SerializedName("visibility")

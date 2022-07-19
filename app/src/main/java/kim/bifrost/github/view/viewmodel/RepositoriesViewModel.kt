@@ -6,6 +6,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import kim.bifrost.github.repository.network.pagingsource.UserRepositoriesPagingSource
+import kim.bifrost.github.repository.network.pagingsource.UserStarRepoPagingSource
+import kim.bifrost.github.view.fragment.RepositoriesFragment
 
 /**
  * kim.bifrost.github.view.viewmodel.RepositoriesViewModel
@@ -14,7 +16,7 @@ import kim.bifrost.github.repository.network.pagingsource.UserRepositoriesPaging
  * @author 寒雨
  * @since 2022/7/16 16:45
  */
-class RepositoriesViewModel(private val user: String) : ViewModel() {
+class RepositoriesViewModel(private val type: RepositoriesFragment.Type, private val user: String) : ViewModel() {
     val userRepoData by lazy {
         Pager(
             config = PagingConfig(
@@ -23,7 +25,10 @@ class RepositoriesViewModel(private val user: String) : ViewModel() {
                 initialLoadSize = 20
             ),
             pagingSourceFactory = {
-                UserRepositoriesPagingSource(user)
+                when (type) {
+                    RepositoriesFragment.Type.USER -> UserRepositoriesPagingSource(user)
+                    RepositoriesFragment.Type.USER_STARRED -> UserStarRepoPagingSource(user)
+                }
             }
         ).flow.cachedIn(viewModelScope)
     }

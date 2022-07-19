@@ -99,16 +99,16 @@ class ReflectClass(private val clazz: Class<*>) {
     private var superclass: ReflectClass? = null
 
     // 接口缓存
-    private var interfaces = ArrayList<ReflectClass>()
+    private val interfaces = ArrayList<ReflectClass>()
 
     // 字段缓存
-    private val savingField = ArrayList<Field>()
+    val savingField = ArrayList<Field>()
 
     // 方法缓存
-    private val savingMethod = ArrayList<Method>()
+    val savingMethod = ArrayList<Method>()
 
     // 构造器缓存
-    private val savingConstructor = ArrayList<Constructor<*>>()
+    val savingConstructor = ArrayList<Constructor<*>>()
 
     init {
         kotlin.runCatching {

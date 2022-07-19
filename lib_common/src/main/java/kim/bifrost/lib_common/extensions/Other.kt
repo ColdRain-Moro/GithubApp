@@ -29,16 +29,43 @@ fun Float.dp2spF(): Float = BaseApp.appContext.resources.displayMetrics.scaledDe
 fun Float.dp2sp(): Float = dp2spF() * this
 
 val Int.color: Int
-  get() = ContextCompat.getColor(BaseApp.appContext, this)
+    get() = ContextCompat.getColor(BaseApp.appContext, this)
 
 val Int.string: String
-  get() = BaseApp.appContext.getString(this)
+    get() = BaseApp.appContext.getString(this)
 
 val Int.drawable: Drawable
-  get() = BaseApp.appContext.getDrawable(this)!!
+    get() = BaseApp.appContext.getDrawable(this)!!
 
 val Int.dimen: Float
-  get() = BaseApp.appContext.resources.getDimension(this)
+    get() = BaseApp.appContext.resources.getDimension(this)
 
 val TAG: String
-  get() = Throwable().stackTrace[0].className
+    get() = Throwable().stackTrace[0].className
+
+fun Throwable.asString(): String {
+    return this::class.java.simpleName + ": " + message
+}
+
+fun String?.ifNullOrEmpty(def: () -> String): String = if (this.isNullOrEmpty()) def() else this
+
+fun String.splitWalk(split: String, every: (ele:String, sum: String) -> Unit) {
+    var str = ""
+    val iterator = this.split(split).iterator()
+    while (iterator.hasNext()) {
+        val it = iterator.next()
+        str += it
+        every(it, str)
+        if (iterator.hasNext()) {
+            str += split
+        }
+    }
+}
+
+fun String.spiltWalkAsList(split: String): List<String> {
+    val list = mutableListOf<String>()
+    this.splitWalk(split) { _, sum ->
+        list.add(sum)
+    }
+    return list
+}

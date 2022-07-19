@@ -12,9 +12,8 @@ import kim.bifrost.lib_common.base.adapter.BasePagingSource
  * @author 寒雨
  * @since 2022/7/15 14:46
  */
-class NewsPagingSource : BasePagingSource<Event>() {
+class NewsPagingSource(private val user: String) : BasePagingSource<Event>() {
     override suspend fun getData(page: Int): List<Event> {
-        val user = UserManager.userTemp?.login
-        return UserService.getUserReceivedEvents(user!!, 20, page + 1)
+        return UserService.getUserReceivedEvents(user, 20, page + 1)
     }
 }

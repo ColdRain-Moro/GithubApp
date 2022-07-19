@@ -21,6 +21,10 @@ import kim.bifrost.lib_common.extensions.toast
  */
 class RepositoriesFragment : BaseVmBindFragment<RepositoriesViewModel, FragmentRvBinding>() {
 
+    private val type: Type by lazy {
+        requireArguments().getString("type")?.let { Type.valueOf(it) } ?: error("invalid type")
+    }
+
     private val user: String by lazy {
         requireArguments().getString("user")!!
     }
@@ -52,14 +56,20 @@ class RepositoriesFragment : BaseVmBindFragment<RepositoriesViewModel, FragmentR
     override val viewModelFactory: ViewModelProvider.Factory
         get() = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return RepositoriesViewModel(user) as T
+                return RepositoriesViewModel(type, user) as T
             }
         }
 
+    enum class Type {
+        USER,
+        USER_STARRED
+    }
+
     companion object {
-        fun newInstance(user: String): RepositoriesFragment {
+        fun newInstance(type: Type, user: String): RepositoriesFragment {
             val args = Bundle()
                 .apply {
+                    putString("type", type.toString())
                     putString("user", user)
                 }
             val fragment = RepositoriesFragment()

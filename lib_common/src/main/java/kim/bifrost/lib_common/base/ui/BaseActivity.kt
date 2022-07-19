@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
@@ -13,8 +14,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import kim.bifrost.lib_common.extensions.ReflectClass
+import kim.bifrost.lib_common.extensions.fromJson
+import kim.bifrost.lib_common.extensions.gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import java.io.Serializable
 
 /**
  * kim.bifrost.lib_common.base.ui.BaseActivity
@@ -36,6 +41,31 @@ abstract class BaseActivity(
         }
         if (isCancelStatusBar) {
             cancelStatusBar()
+        }
+        // 进行依赖注入
+        inject()
+    }
+
+    private fun inject() {
+        ReflectClass(this::class.java).savingField.forEach {
+            if (it.isAnnotationPresent(AutoWired::class.java)) {
+                it.isAccessible = true
+                val annotation = it.getAnnotation(AutoWired::class.java)!!
+                val name = annotation.name.ifEmpty { it.name }
+                val value: Any? = when {
+                    it.type == String::class.java -> intent.getStringExtra(name)
+                    it.type == Int::class.java -> intent.getIntExtra(name, 0)
+                    it.type == Boolean::class.java -> intent.getBooleanExtra(name, false)
+                    it.type == Long::class.java -> intent.getLongExtra(name, 0)
+                    it.type == Float::class.java -> intent.getFloatExtra(name, 0f)
+                    it.type == Double::class.java -> intent.getDoubleExtra(name, 0.0)
+                    it.type.isEnum -> it.type.enumConstants.firstOrNull { e -> e.toString() == intent.getStringExtra(name)?.uppercase() }
+                    Parcelable::class.java.isAssignableFrom(it.type) -> intent.getParcelableExtra(name)
+                    Serializable::class.java.isAssignableFrom(it.type) -> intent.getSerializableExtra(name)
+                    else -> intent.getStringExtra(name)?.let { s -> gson.fromJson(s, it.type) }
+                }
+                it.set(this, value)
+            }
         }
     }
 
@@ -73,3 +103,6 @@ abstract class BaseActivity(
         }
     }
 }
+
+@Target(AnnotationTarget.FIELD)
+annotation class AutoWired(val name: String = "")

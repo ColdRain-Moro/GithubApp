@@ -30,7 +30,7 @@ class EventsViewModel(
             ),
             pagingSourceFactory = {
                 when (type) {
-                    EventsFragment.SourceType.NEWS -> NewsPagingSource()
+                    EventsFragment.SourceType.NEWS -> NewsPagingSource(user!!)
                     EventsFragment.SourceType.USER -> UserProfilePagingSource(user!!)
                     EventsFragment.SourceType.REPO -> TODO()
                 }

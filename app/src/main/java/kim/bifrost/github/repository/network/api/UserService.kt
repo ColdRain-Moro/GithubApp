@@ -18,7 +18,7 @@ interface UserService {
      * 需要鉴权
      *
      * @param username 用户名
-     * @param per_page 每页数量
+     * @param perPage 每页数量
      * @param page 页码
      * @return
      */
@@ -26,7 +26,7 @@ interface UserService {
     @Headers("Accept: application/vnd.github.v3+json")
     suspend fun getUserReceivedEvents(
         @Path("username") username: String,
-        @Query("per_page") per_page: Int,
+        @Query("per_page") perPage: Int,
         @Query("page") page: Int
     ): List<Event>
 
@@ -37,6 +37,7 @@ interface UserService {
      * @return
      */
     @GET("user")
+    @Headers("Accept: application/vnd.github.v3+json")
     suspend fun getMe(): User
 
     /**
@@ -47,6 +48,7 @@ interface UserService {
      * @return
      */
     @GET("users/{user}")
+    @Headers("Accept: application/vnd.github.v3+json")
     suspend fun getUser(
         @Path("user") user: String
     ): User
@@ -56,15 +58,48 @@ interface UserService {
      * 如果鉴权通过，返回完整信息，否则返回public部分
      *
      * @param user 用户名
-     * @param per_page 每页数量
+     * @param perPage 每页数量
      * @param page 页码
      */
     @GET("users/{user}/events")
+    @Headers("Accept: application/vnd.github.v3+json")
     suspend fun getUserEvents(
         @Path("user") user: String,
-        @Query("per_page") per_page: Int,
+        @Query("per_page") perPage: Int,
         @Query("page") page: Int
     ): List<Event>
+
+    /**
+     * 列出指定用户所有follower
+     *
+     * @param username
+     * @param perPage
+     * @param page
+     * @return
+     */
+    @GET("/users/{username}/followers")
+    @Headers("Accept: application/vnd.github.v3+json")
+    suspend fun getFollowers(
+        @Path("username") username: String,
+        @Query("per_page") perPage: Int,
+        @Query("page") page: Int
+    ): List<User>
+
+    /**
+     * 列出指定用户正在follow谁
+     *
+     * @param username
+     * @param perPage
+     * @param page
+     * @return
+     */
+    @GET("/users/{username}/following")
+    @Headers("Accept: application/vnd.github.v3+json")
+    suspend fun getFollowing(
+        @Path("username") username: String,
+        @Query("per_page") perPage: Int,
+        @Query("page") page: Int
+    ): List<User>
 
     companion object : UserService by RetrofitHelper.userService
 }

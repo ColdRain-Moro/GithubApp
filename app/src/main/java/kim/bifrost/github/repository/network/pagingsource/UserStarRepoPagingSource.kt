@@ -1,0 +1,25 @@
+package kim.bifrost.github.repository.network.pagingsource
+
+import kim.bifrost.github.repository.network.api.RepoService
+import kim.bifrost.github.repository.network.model.Repository
+import kim.bifrost.lib_common.base.adapter.BasePagingSource
+
+/**
+ * kim.bifrost.github.repository.network.pagingsource.UserStarRepoPagingSource
+ * GitHubApp
+ *
+ * @author 寒雨
+ * @since 2022/7/16 23:53
+ */
+class UserStarRepoPagingSource(private val user: String) : BasePagingSource<Repository>() {
+    override suspend fun getData(page: Int): List<Repository> {
+        return RepoService.getUserStarredRepos(user, page + 1, 20)
+            // 请求颜色
+            .map { repo ->
+                repo.language?.let {
+                    repo.languageColor = RepoService.getLanguageColor(it).data?.hex
+                }
+                return@map repo
+            }
+    }
+}

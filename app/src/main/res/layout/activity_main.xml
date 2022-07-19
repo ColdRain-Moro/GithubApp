@@ -22,7 +22,8 @@
                 app:titleTextColor="@color/white"
                 android:layout_width="match_parent"
                 android:background="?colorPrimary"
-                android:layout_height="?actionBarSize" />
+                android:layout_height="?actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"

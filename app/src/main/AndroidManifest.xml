@@ -7,6 +7,7 @@
 
 
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:name=".GitHubApp"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -41,6 +42,12 @@
         </activity>
         <activity
             android:name=".view.activity.ProfileActivity"
+            android:exported="true">
+        </activity>
+        <activity android:name=".view.activity.ItemListActivity"
+            android:exported="true">
+        </activity>
+        <activity android:name=".view.activity.RepositoryActivity"
             android:exported="true">
         </activity>
     </application>

@@ -35,12 +35,16 @@ class MainViewModel : ViewModel() {
     val user: StateFlow<User?>
         get() = _user
 
-    suspend fun dispatchToolbarChange(event: Toolbar.() -> Unit) {
-        _toolbarBus.emit(event)
+    fun dispatchToolbarChange(event: Toolbar.() -> Unit) {
+        viewModelScope.launch {
+            _toolbarBus.emit(event)
+        }
     }
 
-    suspend fun dispatchTabLayoutChange(event: TabLayout.() -> Unit) {
-        _tabLayoutBus.emit(event)
+    fun dispatchTabLayoutChange(event: TabLayout.() -> Unit) {
+        viewModelScope.launch {
+            _tabLayoutBus.emit(event)
+        }
     }
 
     fun getSelf() {

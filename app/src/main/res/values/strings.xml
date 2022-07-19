@@ -56,4 +56,8 @@
     <string name="following">Following</string>
     <string name="repo">Repositories</string>
     <string name="gists">Gists</string>
+    <string name="stargazers">Stargazers</string>
+    <string name="forks">Forks</string>
+    <string name="watchers">Watchers</string>
+    <string name="readme">README</string>
 </resources>

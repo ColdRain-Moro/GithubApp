@@ -16,6 +16,8 @@ import kim.bifrost.github.view.fragment.SplashFragment
 import kim.bifrost.github.view.viewmodel.LoginViewModel
 import kim.bifrost.lib_common.extensions.*
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindActivity
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.launch
 
 class LoginActivity : BaseVmBindActivity<LoginViewModel, ActivityLoginBinding>() {
@@ -26,6 +28,7 @@ class LoginActivity : BaseVmBindActivity<LoginViewModel, ActivityLoginBinding>()
             .setTitle("请稍等")
             .setMessage("正在跳转...")
             .show()
+
         fun sendError() {
             dialog.dismiss()
             MaterialAlertDialogBuilder(this)
@@ -34,21 +37,21 @@ class LoginActivity : BaseVmBindActivity<LoginViewModel, ActivityLoginBinding>()
                 .setPositiveButton("OK") { _, _ -> }
                 .show()
         }
+
         val uri = intent.data ?: return sendError()
 
         val code = uri.getQueryParameter("code") ?: return sendError()
         val state = uri.getQueryParameter("state") ?: return sendError()
-        lifecycleScope.launch {
-            tryRun {
-                val data = viewModel.getAccessToken(code, state)
+        viewModel.getAccessToken(code, state)
+        viewModel.oauthToken.collectLaunch { data ->
+            if (data != null) {
+                data.expires = System.currentTimeMillis() + data.expiresIn.toLong() * 1000
+                data.refreshTokenExpires = System.currentTimeMillis() + data.refreshTokenExpiresIn.toLong() * 1000
                 UserManager.authTokenData = data
                 MainActivity.start(this@LoginActivity)
                 // dismiss掉再finish 不然会导致window leaked
                 dialog.dismiss()
                 finish()
-            } catchAll {
-                dialog.dismiss()
-                toast("网络请求错误: ${it.message}")
             }
         }
     }
@@ -59,23 +62,49 @@ class LoginActivity : BaseVmBindActivity<LoginViewModel, ActivityLoginBinding>()
             SplashFragment()
         }
         binding.splashScreen.postDelayed(1600) {
-            binding.splashScreen.startAnimation(
-                AlphaAnimation(1F, 0F).apply {
-                    duration = 400
-                    setOnEnd {
-                        supportFragmentManager.commit {
-                            remove(splashFragment)
-                        }
-                        binding.splashScreen.gone()
-                        // 已经登录就直接进入
-                        if (UserManager.authTokenData != null) {
-                            Log.d(TAG, "onCreate: ${UserManager.authTokenData!!.accessToken}")
+            // 存在缓存
+            if (UserManager.authTokenData != null) {
+                // access_token未过期
+                if (UserManager.authTokenData!!.expires > System.currentTimeMillis()) {
+                    MainActivity.start(this@LoginActivity)
+                    finish()
+                } else if (UserManager.authTokenData!!.refreshTokenExpires > System.currentTimeMillis()) {
+                    // access_token过期，但refresh_token未过期
+                    viewModel.getAccessTokenFromRefreshToken(UserManager.authTokenData!!.refreshToken)
+                    viewModel.oauthToken.collectLaunch { data ->
+                        if (data != null) {
+                            UserManager.authTokenData = data
                             MainActivity.start(this@LoginActivity)
                             finish()
                         }
                     }
+                } else {
+                    UserManager.authTokenData = null
+                    binding.splashScreen.startAnimation(
+                        AlphaAnimation(1F, 0F).apply {
+                            duration = 400
+                            setOnEnd {
+                                supportFragmentManager.commit {
+                                    remove(splashFragment)
+                                }
+                                binding.splashScreen.gone()
+                            }
+                        }
+                    )
                 }
-            )
+            } else {
+                binding.splashScreen.startAnimation(
+                    AlphaAnimation(1F, 0F).apply {
+                        duration = 400
+                        setOnEnd {
+                            supportFragmentManager.commit {
+                                remove(splashFragment)
+                            }
+                            binding.splashScreen.gone()
+                        }
+                    }
+                )
+            }
         }
         binding.btnLogin.setOnClickListener {
             UserManager.openOAuth2Page(this)

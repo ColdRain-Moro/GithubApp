@@ -19,9 +19,11 @@ data class OAuthToken(
     val refreshToken: String,
     val scope: String,
     @SerializedName("expires_in")
-    val expiresIn: String,
+    var expiresIn: String,
     @SerializedName("refresh_token_expires_in")
-    val refreshTokenExpiresIn: String,
+    var refreshTokenExpiresIn: String,
     @SerializedName("token_type")
-    val tokenType: String
+    val tokenType: String,
+    var expires: Long = 0,
+    var refreshTokenExpires: Long = 0
 ): Parcelable

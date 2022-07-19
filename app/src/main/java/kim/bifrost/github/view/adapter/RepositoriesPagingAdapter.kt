@@ -4,8 +4,10 @@ import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import kim.bifrost.github.databinding.ItemRepoBinding
 import kim.bifrost.github.repository.network.model.Repository
+import kim.bifrost.github.view.activity.RepositoryActivity
 import kim.bifrost.lib_common.base.adapter.BasePagingAdapter
 import kim.bifrost.lib_common.extensions.gone
 import kim.bifrost.lib_common.extensions.visible
@@ -22,6 +24,14 @@ class RepositoriesPagingAdapter(context: Context) : BasePagingAdapter<ItemRepoBi
         return ItemRepoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     }
 
+    override val holderInit: Holder<ItemRepoBinding>.() -> Unit
+        get() = {
+            binding.root.setOnClickListener {
+                val data = getItem(bindingAdapterPosition)!!
+                RepositoryActivity.start(context, data)
+            }
+        }
+
     override fun onBindViewHolder(holder: Holder<ItemRepoBinding>, position: Int) {
         val data = getItem(position)!!
         holder.binding.apply {
@@ -32,13 +42,16 @@ class RepositoriesPagingAdapter(context: Context) : BasePagingAdapter<ItemRepoBi
                 llLang.visible()
                 tvLang.text = data.language
                 if (data.languageColor != null) {
-                    ivAvatar.setColorFilter(Color.parseColor(data.languageColor))
+                    ivDot.setColorFilter(Color.parseColor(data.languageColor))
                 }
             } else {
                 llLang.gone()
             }
             tvStars.text = data.stargazersCount.toString()
             tvForks.text = data.forksCount.toString()
+            Glide.with(ivAvatar)
+                .load(data.owner.avatarUrl)
+                .into(ivAvatar)
         }
     }
 }

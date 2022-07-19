@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="?attr/materialCardViewElevatedStyle"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/white"
+    app:contentPadding="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            tools:src="@drawable/ic_github_logo"
+            android:id="@+id/iv_avatar"
+            app:shapeAppearance="@style/CircleStyle"
+            android:layout_marginEnd="20dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp" />
+
+        <TextView
+            tools:text="lomirus"
+            android:id="@+id/tv_name"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_gravity="center_vertical" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+</com.google.android.material.card.MaterialCardView>

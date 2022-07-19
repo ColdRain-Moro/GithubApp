@@ -10,6 +10,7 @@ import kim.bifrost.github.databinding.FragmentRvBinding
 import kim.bifrost.github.view.adapter.EventsPagingAdapter
 import kim.bifrost.github.view.viewmodel.EventsViewModel
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindFragment
+import kim.bifrost.lib_common.extensions.asString
 import kim.bifrost.lib_common.extensions.toast
 
 /**
@@ -43,7 +44,7 @@ class EventsFragment : BaseVmBindFragment<EventsViewModel, FragmentRvBinding>() 
                 when (state.refresh) {
                     is LoadState.Loading -> binding.srlEvents.isRefreshing = true
                     is LoadState.NotLoading -> binding.srlEvents.isRefreshing = false
-                    is LoadState.Error -> "数据加载错误: ${(state.refresh as LoadState.Error).error.message}".toast()
+                    is LoadState.Error -> "数据加载错误: ${(state.refresh as LoadState.Error).error.asString()}".toast()
                 }
             }
             binding.srlEvents.setOnRefreshListener {

@@ -6,6 +6,7 @@
         <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/ic_add_account.xml" value="0.138" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.138" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/ic_bookmark.xml" value="0.138" />
+        <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/ic_branch.xml" value="0.1475" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/ic_branch_title.xml" value="0.1475" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/ic_collections.xml" value="0.138" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/ic_dot.xml" value="0.138" />
@@ -50,6 +51,7 @@
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/fragment_rv.xml" value="0.159375" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/fragment_splash.xml" value="0.2509057971014493" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/fragment_user_info.xml" value="0.25" />
+        <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/item_branch.xml" value="0.2767210144927536" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/item_commit.xml" value="0.2767210144927536" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/item_event.xml" value="0.2509057971014493" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/item_file.xml" value="0.2767210144927536" />

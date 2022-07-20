@@ -252,6 +252,12 @@ interface RepoService {
         @Path("repo") repo: String
     ): Response<ResponseBody>
 
+    @GET("repos/{owner}/{repo}/branches")
+    suspend fun getBranches(
+        @Path("owner") owner: String?,
+        @Path("repo") repo: String?
+    ): List<Branch>
+
     /**
      * 获取语言对应颜色
      *

@@ -1,17 +1,22 @@
 package kim.bifrost.github.view.activity
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import kim.bifrost.github.R
 import kim.bifrost.github.databinding.ActivityRepoBinding
 import kim.bifrost.github.repository.network.model.Repository
+import kim.bifrost.github.view.adapter.BranchAdapter
 import kim.bifrost.github.view.fragment.CommitFragment
 import kim.bifrost.github.view.fragment.EventsFragment
 import kim.bifrost.github.view.fragment.FilesFragment
@@ -111,12 +116,36 @@ class RepositoryActivity : BaseVmBindActivity<RepoViewModel, ActivityRepoBinding
                     viewModel.setStarred(!viewModel.starred.value!!)
                 }
             }
+            R.id.action_branch -> {
+                showBranchSelectDialog()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun showBranchSelectDialog() {
-
+        val recyclerView = RecyclerView(this)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+        val dialog = AlertDialog.Builder(this)
+            .setCancelable(true)
+            .setTitle("Select Branch")
+            .setView(recyclerView)
+            .setNegativeButton("Cancel") { _, _ -> }
+            .show()
+        val adapter = BranchAdapter(viewModel.currentBranch.value) {
+            viewModel.setCurrentBranch(it)
+            dialog.dismiss()
+        }
+        recyclerView.adapter = adapter
+        viewModel.requestBranches().collectLaunch {
+            adapter.submitList(it)
+        }
     }
 
     companion object {

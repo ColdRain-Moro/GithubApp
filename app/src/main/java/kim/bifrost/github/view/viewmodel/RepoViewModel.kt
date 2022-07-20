@@ -6,12 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kim.bifrost.github.repository.network.api.RepoService
+import kim.bifrost.github.repository.network.model.Branch
 import kim.bifrost.github.repository.network.model.Repository
 import kim.bifrost.lib_common.extensions.TAG
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /**
@@ -23,12 +21,28 @@ import kotlinx.coroutines.launch
  */
 class RepoViewModel : ViewModel() {
     lateinit var repo: Repository
-    var currentBranch: String? = null
-
+    private val _currentBranch = MutableLiveData<String>()
     private val _starred = MutableLiveData<Boolean>()
 
+    val currentBranch: LiveData<String>
+        get() = _currentBranch
     val starred: LiveData<Boolean>
         get() = _starred
+    val readme by lazy {
+        flow {
+            emit(RepoService.getRepoReadme(repo.owner.login, repo.name, _currentBranch.value))
+        }
+    }
+
+    fun requestBranches(): Flow<List<String>> {
+        return flow {
+            emit(RepoService.getBranches(repo.owner.login, repo.name))
+        }.map { it.map { s -> s.name } }
+    }
+
+    fun setCurrentBranch(branch: String) {
+        _currentBranch.value = branch
+    }
 
     fun initStarredState() {
         viewModelScope.launch {
@@ -54,12 +68,6 @@ class RepoViewModel : ViewModel() {
             if (success) {
                 _starred.value = starred
             }
-        }
-    }
-
-    val readme by lazy {
-        flow {
-            emit(RepoService.getRepoReadme(repo.owner.login, repo.name))
         }
     }
 }

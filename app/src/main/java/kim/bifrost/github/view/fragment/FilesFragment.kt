@@ -2,6 +2,7 @@ package kim.bifrost.github.view.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import kim.bifrost.github.databinding.FragmentFilesBinding
 import kim.bifrost.github.repository.network.model.RepoFile
@@ -9,6 +10,7 @@ import kim.bifrost.github.view.activity.WebActivity
 import kim.bifrost.github.view.adapter.FilesAdapter
 import kim.bifrost.github.view.adapter.PathAdapter
 import kim.bifrost.github.view.viewmodel.FilesViewModel
+import kim.bifrost.github.view.viewmodel.RepoViewModel
 import kim.bifrost.lib_common.base.ui.AutoWired
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindFragment
 import kim.bifrost.lib_common.extensions.spiltWalkAsList
@@ -28,6 +30,8 @@ class FilesFragment : BaseVmBindFragment<FilesViewModel, FragmentFilesBinding>()
     private lateinit var user: String
     @AutoWired
     private var branch: String? = null
+
+    private val activityViewModel by activityViewModels<RepoViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel.init(user, repo, branch)
@@ -70,6 +74,9 @@ class FilesFragment : BaseVmBindFragment<FilesViewModel, FragmentFilesBinding>()
             viewModel.mdFlow.collectLaunch { (name, value) ->
                 WebActivity.start(requireContext(), WebActivity.Type.MD, name, mdSource = value)
             }
+        }
+        activityViewModel.currentBranch.observe(viewLifecycleOwner) {
+            viewModel.branch = it
         }
     }
 

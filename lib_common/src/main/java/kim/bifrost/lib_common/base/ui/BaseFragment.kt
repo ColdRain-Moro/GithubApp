@@ -10,6 +10,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import kim.bifrost.lib_common.extensions.ReflectClass
 import kim.bifrost.lib_common.extensions.gson
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.io.Serializable
@@ -37,8 +38,8 @@ abstract class BaseFragment : Fragment() {
     /**
      * 结合生命周期收集 Flow 方法
      */
-    protected fun <T> Flow<T>.collectLaunch(action: suspend (value: T) -> Unit) {
-        lifecycleScope.launch {
+    protected fun <T> Flow<T>.collectLaunch(action: suspend (value: T) -> Unit): Job {
+        return lifecycleScope.launch {
             collect { action.invoke(it) }
         }
     }

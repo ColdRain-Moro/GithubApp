@@ -47,6 +47,7 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
                     Type.USER_FOLLOWERS -> "Followers"
                     Type.REPO_STARGAZERS -> "Stargazers"
                     Type.REPO_WATCHERS -> "Watchers"
+                    Type.REPO_FORKS -> "Forks"
                 }
                 it.subtitle = if (type.toString().startsWith("REPO_")) "$user/$repo" else user
                 it.setDisplayHomeAsUpEnabled(true)
@@ -76,7 +77,7 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
                         adapter.submitData(it)
                     }
                 }
-                Type.USER_REPOSITORIES -> {
+                Type.USER_REPOSITORIES, Type.REPO_FORKS -> {
                     viewModel.repoPagingSource.collectLaunch {
                         val adapter = RepositoriesPagingAdapter(this@ItemListActivity)
                         rv.adapter = adapter
@@ -111,6 +112,7 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
         USER_REPOSITORIES,
         REPO_STARGAZERS,
         REPO_WATCHERS,
+        REPO_FORKS
     }
 
     companion object {

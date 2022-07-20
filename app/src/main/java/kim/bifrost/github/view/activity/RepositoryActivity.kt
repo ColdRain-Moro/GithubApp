@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
+import kim.bifrost.github.R
 import kim.bifrost.github.databinding.ActivityRepoBinding
 import kim.bifrost.github.repository.network.model.Repository
 import kim.bifrost.github.view.fragment.CommitFragment
@@ -19,6 +21,8 @@ import kim.bifrost.lib_common.base.adapter.BaseVPAdapter
 import kim.bifrost.lib_common.base.ui.AutoWired
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindActivity
 import kim.bifrost.lib_common.extensions.argument
+import kim.bifrost.lib_common.extensions.drawable
+import kim.bifrost.lib_common.extensions.toast
 
 /**
  * kim.bifrost.github.view.activity.RepositoryActivity
@@ -31,6 +35,8 @@ class RepositoryActivity : BaseVmBindActivity<RepoViewModel, ActivityRepoBinding
 
     @AutoWired
     private lateinit var repo: Repository
+
+    private lateinit var menu: Menu
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,6 +76,29 @@ class RepositoryActivity : BaseVmBindActivity<RepoViewModel, ActivityRepoBinding
                 }
             }.attach()
         }
+        var firstTime = true
+        viewModel.initStarredState()
+        viewModel.starred.observe(this) {
+            menu.findItem(R.id.action_star).icon = if (it) {
+                R.drawable.ic_star_title
+            } else {
+                R.drawable.ic_menu_star
+            }.drawable
+            if (!firstTime) {
+                if (it) {
+                    "Starred"
+                } else {
+                    "Unstarred"
+                }.toast()
+            }
+            firstTime = false
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_repository, menu)
+        this.menu = menu
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -77,8 +106,17 @@ class RepositoryActivity : BaseVmBindActivity<RepoViewModel, ActivityRepoBinding
             android.R.id.home -> {
                 finish()
             }
+            R.id.action_star -> {
+                if (viewModel.starred.value != null) {
+                    viewModel.setStarred(!viewModel.starred.value!!)
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showBranchSelectDialog() {
+
     }
 
     companion object {

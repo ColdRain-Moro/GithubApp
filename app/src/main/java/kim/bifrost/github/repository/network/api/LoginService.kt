@@ -22,16 +22,7 @@ interface LoginService {
         @Query("client_id") clientId: String,
         @Query("client_secret") clientSecret: String,
         @Query("code") code: String,
-        @Query("state") state: String
-    ): OAuthToken
-
-    @POST("https://github.com/login/oauth/access_token")
-    @Headers("Accept: application/json")
-    suspend fun getAccessTokenFromRefreshToken(
-        @Query("refresh_token") refreshToken: String,
-        @Query("grant_type") grantType: String = "refresh_token",
-        @Query("client_id") clientId: String = APP_CLIENT_ID,
-        @Query("client_secret") clientSecret: String = APP_CLIENT_SECRET
+        @Query("state") state: String,
     ): OAuthToken
 
     companion object : LoginService by RetrofitHelper.loginService

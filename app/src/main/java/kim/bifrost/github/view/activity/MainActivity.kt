@@ -91,6 +91,11 @@ class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>() {
                             closeDrawer()
                         }
                     }
+                    R.id.nav_issues -> {
+                        if (viewModel.user.value != null) {
+                            IssuesActivity.start(this@MainActivity, IssuesActivity.Type.USER)
+                        }
+                    }
                 }
                 true
             }

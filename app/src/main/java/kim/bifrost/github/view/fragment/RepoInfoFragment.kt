@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import kim.bifrost.github.databinding.FragmentRepoInfoBinding
 import kim.bifrost.github.utils.renderMarkdown
+import kim.bifrost.github.view.activity.IssuesActivity
 import kim.bifrost.github.view.activity.ItemListActivity
 import kim.bifrost.github.view.viewmodel.RepoViewModel
 import kim.bifrost.lib_common.base.ui.BaseBindFragment
@@ -42,6 +43,12 @@ class RepoInfoFragment : BaseBindFragment<FragmentRepoInfoBinding>() {
             }
             llWatchers.setOnClickListener {
                 ItemListActivity.start(requireContext(), ItemListActivity.Type.REPO_WATCHERS, viewModel.repo.owner.login, viewModel.repo.name)
+            }
+            llIssues.setOnClickListener {
+                IssuesActivity.start(requireContext(), IssuesActivity.Type.REPO, viewModel.repo)
+            }
+            llForks.setOnClickListener {
+                ItemListActivity.start(requireContext(), ItemListActivity.Type.REPO_FORKS, viewModel.repo.owner.login, viewModel.repo.name)
             }
             viewModel.readme.catch {
                 cardReadme.gone()

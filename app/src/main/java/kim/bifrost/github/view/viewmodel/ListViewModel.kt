@@ -48,7 +48,11 @@ class ListViewModel(
                 initialLoadSize = 20
             ),
             pagingSourceFactory = {
-                UserRepositoriesPagingSource(user)
+                when (type) {
+                    ItemListActivity.Type.REPO_FORKS -> RepoForksPagingSource(user, repo!!)
+                    ItemListActivity.Type.USER_REPOSITORIES -> UserRepositoriesPagingSource(user)
+                    else -> throw IllegalArgumentException("type is not supported")
+                }
             }
         ).flow.cachedIn(viewModelScope)
     }

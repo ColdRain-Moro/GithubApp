@@ -3,9 +3,11 @@ package kim.bifrost.github.user
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.core.content.edit
 import kim.bifrost.github.repository.network.model.OAuthToken
 import kim.bifrost.github.repository.network.model.User
+import kim.bifrost.lib_common.extensions.TAG
 import kim.bifrost.lib_common.extensions.defaultSp
 import kim.bifrost.lib_common.extensions.fromJson
 import kim.bifrost.lib_common.extensions.toJson
@@ -28,6 +30,7 @@ object UserManager {
             if (field == null) {
                 field = defaultSp.getString(OAUTH_TOKEN_DATA, null)?.fromJson()
             }
+            Log.d(TAG, ": $field")
             return field
         }
         set(value) {
@@ -52,6 +55,7 @@ object UserManager {
                 "?client_id=" + APP_CLIENT_ID +
                 "&state=" + UUID.randomUUID().toString() +
                 "&scope=" + "user,repo,gist,notifications"
+        Log.d(TAG, "openOAuth2Page: $url")
         val uri = Uri.parse(url)
         val intent = Intent(Intent.ACTION_VIEW, uri)
             .addCategory(Intent.CATEGORY_BROWSABLE)

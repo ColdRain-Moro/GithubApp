@@ -49,7 +49,7 @@ class MainViewModel : ViewModel() {
 
     fun getSelf() {
         viewModelScope.launch {
-            _user.value = UserService.getMe()
+            _user.value = UserService.getMe().also { UserManager.userTemp = it }
         }
     }
 

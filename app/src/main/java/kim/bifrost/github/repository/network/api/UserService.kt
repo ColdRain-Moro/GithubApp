@@ -1,6 +1,7 @@
 package kim.bifrost.github.repository.network.api
 
 import kim.bifrost.github.repository.network.RetrofitHelper
+import kim.bifrost.github.repository.network.model.Issue
 import kim.bifrost.github.repository.network.model.User
 import kim.bifrost.github.repository.network.model.event.Event
 import retrofit2.http.*
@@ -100,6 +101,24 @@ interface UserService {
         @Query("per_page") perPage: Int,
         @Query("page") page: Int
     ): List<User>
+
+    /**
+     * 列出授权用户所有issue
+     * 需要鉴权
+     *
+     * @param page
+     * @param perPage
+     * @param state open / close / all
+     * @param sort created / updated / comments
+     * @return
+     */
+    @GET("/issues")
+    suspend fun getUserIssues(
+        @Query("state") state: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int,
+        @Query("sort") sort: String = "created",
+    ): List<Issue>
 
     companion object : UserService by RetrofitHelper.userService
 }

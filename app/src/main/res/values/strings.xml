@@ -60,4 +60,15 @@
     <string name="forks">Forks</string>
     <string name="watchers">Watchers</string>
     <string name="readme">README</string>
+    <string name="star">Star</string>
+    <string name="branch">Branch</string>
+    <string name="share">Share</string>
+    <string name="open_in_browser">Open in browser</string>
+    <string name="copy_url">Copy URL</string>
+    <string name="copy_clone_url">Copy clone URL</string>
+    <string name="watch">Watch</string>
+    <string name="fork">Fork</string>
+    <string name="releases">Releases</string>
+    <string name="wiki">Wiki</string>
+    <string name="bookmark">Bookmark</string>
 </resources>

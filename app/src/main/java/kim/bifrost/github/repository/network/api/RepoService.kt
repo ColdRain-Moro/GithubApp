@@ -179,6 +179,80 @@ interface RepoService {
     ): List<Event>
 
     /**
+     * 获取仓库Issues
+     *
+     * @param owner
+     * @param repo
+     * @param state open / close / all
+     * @param sort created / updated / comments
+     * @param page
+     * @param perPage
+     * @return
+     */
+    @GET("/repos/{owner}/{repo}/issues")
+    suspend fun getRepositoryIssues(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Query("state") state: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int,
+        @Query("sort") sort: String = "created",
+    ): List<Issue>
+
+    /**
+     * 列出仓库所有fork
+     *
+     * @param owner
+     * @param repo
+     * @param page
+     * @param perPage
+     * @param sort newest oldest stargazers watchers
+     */
+    @GET("/repos/{owner}/{repo}/forks")
+    suspend fun getRepositoryForks(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int,
+        @Query("sort") sort: String = "newest",
+    ): List<Repository>
+
+    /**
+     * 点star
+     *
+     * @param owner
+     * @param repo
+     * @return
+     */
+    @PUT("user/starred/{owner}/{repo}")
+    suspend fun starRepo(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Response<ResponseBody>
+
+    /**
+     * 取消star
+     *
+     * @param owner
+     * @param repo
+     * @return
+     */
+    @DELETE("user/starred/{owner}/{repo}")
+    suspend fun unstarRepo(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Response<ResponseBody>
+
+    /**
+     * Check if you are starring a repository
+     */
+    @GET("user/starred/{owner}/{repo}")
+    suspend fun checkRepoStarred(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Response<ResponseBody>
+
+    /**
      * 获取语言对应颜色
      *
      * @param lang

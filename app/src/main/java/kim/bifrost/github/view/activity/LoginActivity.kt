@@ -45,8 +45,6 @@ class LoginActivity : BaseVmBindActivity<LoginViewModel, ActivityLoginBinding>()
         viewModel.getAccessToken(code, state)
         viewModel.oauthToken.collectLaunch { data ->
             if (data != null) {
-                data.expires = System.currentTimeMillis() + data.expiresIn.toLong() * 1000
-                data.refreshTokenExpires = System.currentTimeMillis() + data.refreshTokenExpiresIn.toLong() * 1000
                 UserManager.authTokenData = data
                 MainActivity.start(this@LoginActivity)
                 // dismiss掉再finish 不然会导致window leaked
@@ -64,34 +62,29 @@ class LoginActivity : BaseVmBindActivity<LoginViewModel, ActivityLoginBinding>()
         binding.splashScreen.postDelayed(1600) {
             // 存在缓存
             if (UserManager.authTokenData != null) {
-                // access_token未过期
-                if (UserManager.authTokenData!!.expires > System.currentTimeMillis()) {
-                    MainActivity.start(this@LoginActivity)
-                    finish()
-                } else if (UserManager.authTokenData!!.refreshTokenExpires > System.currentTimeMillis()) {
-                    // access_token过期，但refresh_token未过期
-                    viewModel.getAccessTokenFromRefreshToken(UserManager.authTokenData!!.refreshToken)
-                    viewModel.oauthToken.collectLaunch { data ->
-                        if (data != null) {
-                            UserManager.authTokenData = data
-                            MainActivity.start(this@LoginActivity)
-                            finish()
-                        }
-                    }
-                } else {
-                    UserManager.authTokenData = null
-                    binding.splashScreen.startAnimation(
-                        AlphaAnimation(1F, 0F).apply {
-                            duration = 400
-                            setOnEnd {
-                                supportFragmentManager.commit {
-                                    remove(splashFragment)
+                // 测试是否过期，获取用户信息
+                viewModel.getUserInfo(
+                    onError = {
+                        // 过期了，重新登录
+                        UserManager.authTokenData = null
+                        binding.splashScreen.startAnimation(
+                            AlphaAnimation(1F, 0F).apply {
+                                duration = 400
+                                setOnEnd {
+                                    supportFragmentManager.commit {
+                                        remove(splashFragment)
+                                    }
+                                    binding.splashScreen.gone()
                                 }
-                                binding.splashScreen.gone()
                             }
-                        }
-                    )
-                }
+                        )
+                    },
+                    onSuccess = {
+                        // 没过期 直接跳转
+                        MainActivity.start(this@LoginActivity)
+                        finish()
+                    }
+                )
             } else {
                 binding.splashScreen.startAnimation(
                     AlphaAnimation(1F, 0F).apply {

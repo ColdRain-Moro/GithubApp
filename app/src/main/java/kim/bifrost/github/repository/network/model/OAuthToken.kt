@@ -15,15 +15,5 @@ import kotlinx.parcelize.Parcelize
 data class OAuthToken(
     @SerializedName("access_token")
     val accessToken: String,
-    @SerializedName("refresh_token")
-    val refreshToken: String,
     val scope: String,
-    @SerializedName("expires_in")
-    var expiresIn: String,
-    @SerializedName("refresh_token_expires_in")
-    var refreshTokenExpiresIn: String,
-    @SerializedName("token_type")
-    val tokenType: String,
-    var expires: Long = 0,
-    var refreshTokenExpires: Long = 0
 ): Parcelable

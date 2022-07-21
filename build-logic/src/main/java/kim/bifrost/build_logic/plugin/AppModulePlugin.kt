@@ -9,6 +9,7 @@ import kim.bifrost.build_logic.plugin.base.BaseModulePlugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 
 /**
  * kim.bifrost.build_logic.plugin.AppModulePlugin
@@ -34,6 +35,11 @@ class AppModulePlugin : BaseModulePlugin() {
             }
         }
         dependAndroidBase()
+        extensions.configure<KaptExtension> {
+            arguments {
+                arg("room.schemaLocation", "${project.projectDir}/schemas") // room 的架构导出目录
+            }
+        }
     }
 
     override fun Project.initAndroid() {

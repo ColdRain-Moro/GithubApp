@@ -19,7 +19,7 @@ import kim.bifrost.lib_common.extensions.visible
  * @author 寒雨
  * @since 2022/7/16 18:36
  */
-class RepositoriesPagingAdapter(context: Context) : BasePagingAdapter<ItemRepoBinding, Repository>(context) {
+class RepositoriesPagingAdapter : BasePagingAdapter<ItemRepoBinding, Repository>() {
     override fun getDataBinding(parent: ViewGroup, viewType: Int): ItemRepoBinding {
         return ItemRepoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     }
@@ -28,7 +28,7 @@ class RepositoriesPagingAdapter(context: Context) : BasePagingAdapter<ItemRepoBi
         get() = {
             binding.root.setOnClickListener {
                 val data = getItem(bindingAdapterPosition)!!
-                RepositoryActivity.start(context, data)
+                RepositoryActivity.start(itemView.context, data)
             }
         }
 

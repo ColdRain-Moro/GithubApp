@@ -33,7 +33,7 @@ class IssuesFragment : BaseVmBindFragment<IssuesFragViewModel, FragmentItemsBind
     private lateinit var state: State
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val adapter = IssuesPagingAdapter(requireContext(), if (type == Type.MY_ISSUES) null else user + repo)
+        val adapter = IssuesPagingAdapter(if (type == Type.MY_ISSUES) null else user + repo)
         viewModel.pagingData.collectLaunch {
             adapter.submitData(it)
         }

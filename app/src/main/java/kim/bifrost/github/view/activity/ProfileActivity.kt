@@ -6,11 +6,14 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
+import kim.bifrost.github.R
 import kim.bifrost.github.databinding.ActivityProfileBinding
+import kim.bifrost.github.user.UserManager
 import kim.bifrost.github.view.fragment.EventsFragment
 import kim.bifrost.github.view.fragment.ProfileUserInfoFragment
 import kim.bifrost.github.view.fragment.RepositoriesFragment
@@ -69,15 +72,26 @@ class ProfileActivity : BaseVmBindActivity<ProfileViewModel, ActivityProfileBind
                         .into(sivAvatar)
                     tvPlace.text = user.location
                     tvJoinedTime.text = "Joined at " + user.createdAt.asEnglishString()
+                    if (user.name != UserManager.userTemp?.name) {
+                        viewModel.addToTrace()
+                    }
                 }
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_profile, menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 finish()
+            }
+            R.id.action_bookmark -> {
+                viewModel.addToBookmark()
             }
         }
         return super.onOptionsItemSelected(item)

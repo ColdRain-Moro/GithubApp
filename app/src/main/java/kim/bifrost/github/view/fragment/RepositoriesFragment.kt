@@ -31,7 +31,7 @@ class RepositoriesFragment : BaseVmBindFragment<RepositoriesViewModel, FragmentR
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel.userRepoData.collectLaunch {
-            val adapter = RepositoriesPagingAdapter(requireContext())
+            val adapter = RepositoriesPagingAdapter()
             binding.apply {
                 rvEvents.apply {
                     layoutManager = LinearLayoutManager(requireContext())

@@ -1,6 +1,7 @@
 package kim.bifrost.github.repository.network.model
 
 import com.google.gson.annotations.SerializedName
+import kim.bifrost.github.repository.database.entity.LocalUserEntity
 import java.util.*
 
 /**
@@ -41,4 +42,10 @@ data class User(
         @SerializedName("Organization")
         Organization
     }
+
+    fun local(): LocalUserEntity = LocalUserEntity(
+        id.toInt(),
+        login,
+        avatarUrl
+    )
 }

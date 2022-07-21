@@ -15,7 +15,7 @@ import kim.bifrost.lib_common.base.adapter.BasePagingAdapter
  * @author 寒雨
  * @since 2022/7/17 14:55
  */
-class UserListPagingAdapter(context: Context, private val onClick: (data: User) -> Unit) : BasePagingAdapter<ItemUserBinding, User>(context) {
+class UserListPagingAdapter(context: Context, private val onClick: (data: User) -> Unit) : BasePagingAdapter<ItemUserBinding, User>() {
     override fun getDataBinding(parent: ViewGroup, viewType: Int): ItemUserBinding {
         return ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     }

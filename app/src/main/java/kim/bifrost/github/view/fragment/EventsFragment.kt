@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import kim.bifrost.github.databinding.FragmentRvBinding
@@ -14,7 +13,6 @@ import kim.bifrost.github.view.viewmodel.EventsViewModel
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindFragment
 import kim.bifrost.lib_common.extensions.asString
 import kim.bifrost.lib_common.extensions.toast
-import kotlinx.coroutines.launch
 
 /**
  * kim.bifrost.github.view.fragment.NewsFragment
@@ -39,26 +37,26 @@ class EventsFragment : BaseVmBindFragment<EventsViewModel, FragmentRvBinding>() 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val eventsAdapter = EventsPagingAdapter(requireContext()) { event ->
+        val eventsAdapter = EventsPagingAdapter { event ->
             viewModel.getRepoFlow(event.repo.name).collectLaunch {
                 RepositoryActivity.start(requireContext(), it)
             }
         }
+        binding.rvEvents.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = eventsAdapter
+        }
+        eventsAdapter.addLoadStateListener { state ->
+            when (state.refresh) {
+                is LoadState.Loading -> binding.srlEvents.isRefreshing = true
+                is LoadState.NotLoading -> binding.srlEvents.isRefreshing = false
+                is LoadState.Error -> "数据加载错误: ${(state.refresh as LoadState.Error).error.asString()}".toast()
+            }
+        }
+        binding.srlEvents.setOnRefreshListener {
+            eventsAdapter.refresh()
+        }
         viewModel.eventsData.collectLaunch {
-            binding.rvEvents.apply {
-                layoutManager = LinearLayoutManager(requireContext())
-                adapter = eventsAdapter
-            }
-            eventsAdapter.addLoadStateListener { state ->
-                when (state.refresh) {
-                    is LoadState.Loading -> binding.srlEvents.isRefreshing = true
-                    is LoadState.NotLoading -> binding.srlEvents.isRefreshing = false
-                    is LoadState.Error -> "数据加载错误: ${(state.refresh as LoadState.Error).error.asString()}".toast()
-                }
-            }
-            binding.srlEvents.setOnRefreshListener {
-                eventsAdapter.refresh()
-            }
             eventsAdapter.submitData(it)
         }
     }

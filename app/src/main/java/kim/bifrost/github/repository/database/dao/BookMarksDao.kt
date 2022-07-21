@@ -16,17 +16,17 @@ import kotlinx.coroutines.flow.Flow
 interface BookMarksDao {
     @Transaction
     @Query("SELECT * FROM bookmarks")
-    fun queryAll(): Flow<List<BookmarksQueryResult>>
+    suspend fun queryAll(): List<BookmarksQueryResult>
 
     // 冲突时会替换掉
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(entity: BookmarksEntity)
+    suspend fun insert(entity: BookmarksEntity)
 
     // 实现一下分页查询，配合paging食用
     @Transaction
     @Query("SELECT * FROM bookmarks LIMIT :limit OFFSET :offset")
-    fun queryByPage(limit: Int, offset: Int): List<BookmarksQueryResult>
+    suspend fun queryByPage(limit: Int, offset: Int): List<BookmarksQueryResult>
 
     @Query("DELETE FROM bookmarks")
-    fun delete()
+    suspend fun delete()
 }

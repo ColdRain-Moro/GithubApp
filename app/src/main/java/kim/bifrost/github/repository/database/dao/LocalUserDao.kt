@@ -16,5 +16,5 @@ import kim.bifrost.github.repository.database.entity.LocalUserEntity
 interface LocalUserDao {
     // 冲突时会替换掉
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(entity: LocalUserEntity)
+    suspend fun insert(entity: LocalUserEntity)
 }

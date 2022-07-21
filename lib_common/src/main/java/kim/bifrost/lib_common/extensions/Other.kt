@@ -41,7 +41,7 @@ val Int.dimen: Float
     get() = BaseApp.appContext.resources.getDimension(this)
 
 val TAG: String
-    get() = Throwable().stackTrace[1].className
+    get() = Throwable().stackTrace[1].run { "(" + className.substringAfterLast(".") + ".kt" + ":$lineNumber)" }
 
 fun Throwable.asString(): String {
     return this::class.java.simpleName + ": " + message

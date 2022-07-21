@@ -8,7 +8,6 @@ import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import kim.bifrost.github.databinding.ItemRepoBinding
 import kim.bifrost.github.databinding.ItemUserBinding
-import kim.bifrost.github.repository.database.entity.BookmarksEntity
 import kim.bifrost.github.repository.database.entity.BookmarksQueryResult
 import kim.bifrost.lib_common.base.adapter.BasePagingAdapter
 import kim.bifrost.lib_common.extensions.gone
@@ -21,7 +20,7 @@ import kim.bifrost.lib_common.extensions.visible
  * @author 寒雨
  * @since 2022/7/21 10:41
  */
-class BookmarksPagingAdapter(context: Context, private val onClick: (data: BookmarksQueryResult) -> Unit) : BasePagingAdapter<ViewBinding, BookmarksQueryResult>(context) {
+class BookmarksPagingAdapter(private val onClick: (data: BookmarksQueryResult) -> Unit) : BasePagingAdapter<ViewBinding, BookmarksQueryResult>() {
     override fun getDataBinding(parent: ViewGroup, viewType: Int): ViewBinding {
         return when (viewType) {
             ITEM_REPO -> ItemRepoBinding.inflate(LayoutInflater.from(parent.context), parent, false)

@@ -18,7 +18,6 @@ import kim.bifrost.lib_common.utils.getNewsTimeStr
  * @since 2022/7/19 20:06
  */
 class CommitPagingAdapter(context: Context) : BasePagingAdapter<ItemCommitBinding, Commit>(
-    context,
     BaseItemCallback { t1, t2 -> t1 == t2 }
 ) {
     override fun getDataBinding(parent: ViewGroup, viewType: Int): ItemCommitBinding {

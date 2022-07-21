@@ -54,6 +54,7 @@
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/fragment_user_info.xml" value="0.25" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/item_branch.xml" value="0.2767210144927536" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/item_commit.xml" value="0.2767210144927536" />
+        <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/item_divider.xml" value="0.2767210144927536" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/item_event.xml" value="0.2509057971014493" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/item_file.xml" value="0.2767210144927536" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/item_issue.xml" value="0.2767210144927536" />
@@ -62,6 +63,7 @@
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/item_user.xml" value="0.335" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/nav_header.xml" value="0.2509057971014493" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/nav_layout.xml" value="0.2509057971014493" />
+        <entry key="..\:/project/android/GithubApp/app/src/main/res/menu/menu_profile.xml" value="0.3234375" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/menu/menu_repository.xml" value="0.32447916666666665" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/menu/nav_menu.xml" value="0.1" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.138" />

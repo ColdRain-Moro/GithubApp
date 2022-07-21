@@ -14,7 +14,6 @@ import androidx.viewbinding.ViewBinding
  * @since 2022/7/15 10:18
  */
 abstract class BasePagingAdapter<DB : ViewBinding, D : Any>(
-    val context: Context,
     callback: BaseItemCallback<D> = BaseItemCallback(),
 ) : PagingDataAdapter<D, BasePagingAdapter.Holder<DB>>(callback) {
 

@@ -58,7 +58,7 @@ class ListViewModel(
         ).flow.cachedIn(viewModelScope)
     }
 
-    val localRepoPagingSource by lazy {
+    val bookmarksPagingSource by lazy {
         Pager(
             config = PagingConfig(
                 pageSize = 20,
@@ -68,6 +68,22 @@ class ListViewModel(
             pagingSourceFactory = {
                 when (type) {
                     ItemListActivity.Type.BOOKMARKS -> BookmarksPagingSource()
+                    else -> throw IllegalArgumentException("type is not supported")
+                }
+            }
+        ).flow.cachedIn(viewModelScope)
+    }
+
+    val tracePagingSource by lazy {
+        Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false,
+                initialLoadSize = 20
+            ),
+            pagingSourceFactory = {
+                when (type) {
+                    ItemListActivity.Type.TRACE -> TracePagingSource()
                     else -> throw IllegalArgumentException("type is not supported")
                 }
             }

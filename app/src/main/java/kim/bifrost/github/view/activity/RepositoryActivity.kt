@@ -47,6 +47,7 @@ class RepositoryActivity : BaseVmBindActivity<RepoViewModel, ActivityRepoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.repo = repo
+        viewModel.addToTrace()
         binding.apply {
             setSupportActionBar(toolbar)
             supportActionBar?.run {

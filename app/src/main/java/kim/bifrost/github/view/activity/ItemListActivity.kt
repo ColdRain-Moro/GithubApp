@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kim.bifrost.github.databinding.ActivityListBinding
 import kim.bifrost.github.view.adapter.BookmarksPagingAdapter
 import kim.bifrost.github.view.adapter.RepositoriesPagingAdapter
+import kim.bifrost.github.view.adapter.TracePagingAdapter
 import kim.bifrost.github.view.adapter.UserListPagingAdapter
 import kim.bifrost.github.view.viewmodel.ListViewModel
 import kim.bifrost.lib_common.base.ui.AutoWired
@@ -50,6 +51,7 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
                     Type.REPO_WATCHERS -> "Watchers"
                     Type.REPO_FORKS -> "Forks"
                     Type.BOOKMARKS -> "Bookmarks"
+                    Type.TRACE -> "TRACE"
                 }
                 it.subtitle = if (type.toString().startsWith("REPO_")) "$user/$repo" else user
                 it.setDisplayHomeAsUpEnabled(true)
@@ -70,37 +72,55 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
             }
             when (type) {
                 Type.USER_FOLLOWING, Type.USER_FOLLOWERS, Type.REPO_STARGAZERS, Type.REPO_WATCHERS -> {
+                    val adapter = UserListPagingAdapter(this@ItemListActivity) { user ->
+                        ProfileActivity.start(this@ItemListActivity, user.login)
+                    }
+                    rv.adapter = adapter
+                    initAdapter()
                     viewModel.userPagingSource.collectLaunch {
-                        val adapter = UserListPagingAdapter(this@ItemListActivity) { user ->
-                            ProfileActivity.start(this@ItemListActivity, user.login)
-                        }
-                        rv.adapter = adapter
-                        initAdapter()
                         adapter.submitData(it)
                     }
                 }
                 Type.USER_REPOSITORIES, Type.REPO_FORKS -> {
+                    val adapter = RepositoriesPagingAdapter()
+                    rv.adapter = adapter
+                    initAdapter()
                     viewModel.repoPagingSource.collectLaunch {
-                        val adapter = RepositoriesPagingAdapter(this@ItemListActivity)
-                        rv.adapter = adapter
-                        initAdapter()
                         adapter.submitData(it)
                     }
                 }
                 Type.BOOKMARKS -> {
-                    viewModel.localRepoPagingSource.collectLaunch {
-                        val adapter = BookmarksPagingAdapter(this@ItemListActivity) { e ->
-                            if (e.entity.type == "repo") {
-                                viewModel.getRepoFlow(e.repo!!.owner, e.repo.name)
-                                    .collectLaunch { repo ->
-                                        RepositoryActivity.start(this@ItemListActivity, repo)
-                                    }
-                            } else {
-                                ProfileActivity.start(this@ItemListActivity, e.user!!.name)
-                            }
+                    val adapter = BookmarksPagingAdapter { e ->
+                        if (e.entity.type == "repo") {
+                            viewModel.getRepoFlow(e.repo!!.owner, e.repo.name)
+                                .collectLaunch { repo ->
+                                    RepositoryActivity.start(this@ItemListActivity, repo)
+                                }
+                        } else {
+                            ProfileActivity.start(this@ItemListActivity, e.user!!.name)
                         }
-                        rv.adapter = adapter
-                        initAdapter()
+                    }
+                    rv.adapter = adapter
+                    initAdapter()
+                    viewModel.bookmarksPagingSource.collectLaunch {
+                        adapter.submitData(it)
+                    }
+                }
+                Type.TRACE -> {
+                    val adapter = TracePagingAdapter(
+                        onRepoClick = {
+                            viewModel.getRepoFlow(it.owner, it.name)
+                                .collectLaunch { repo ->
+                                    RepositoryActivity.start(this@ItemListActivity, repo)
+                                }
+                        },
+                        onUserClick = {
+                            ProfileActivity.start(this@ItemListActivity, it.name)
+                        }
+                    )
+                    rv.adapter = adapter
+                    initAdapter()
+                    viewModel.tracePagingSource.collectLaunch {
                         adapter.submitData(it)
                     }
                 }
@@ -133,6 +153,7 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
         REPO_WATCHERS,
         REPO_FORKS,
         BOOKMARKS,
+        TRACE
     }
 
     companion object {

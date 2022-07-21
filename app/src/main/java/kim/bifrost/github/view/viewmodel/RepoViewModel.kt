@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kim.bifrost.github.repository.database.AppDatabase
 import kim.bifrost.github.repository.database.entity.BookmarksEntity
+import kim.bifrost.github.repository.database.entity.TraceEntity
 import kim.bifrost.github.repository.network.api.RepoService
 import kim.bifrost.github.repository.network.model.Branch
 import kim.bifrost.github.repository.network.model.Repository
@@ -14,6 +15,7 @@ import kim.bifrost.lib_common.extensions.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.*
 
 /**
  * kim.bifrost.github.view.viewmodel.RepoViewModel
@@ -48,6 +50,24 @@ class RepoViewModel : ViewModel() {
                     )
                 )
                 "Successfully added into your bookmarks".toastOnUIThread()
+            } catchAll {
+                it.asString().toastOnUIThread()
+            }
+        }
+    }
+
+    fun addToTrace() {
+        viewModelScope.launch(Dispatchers.IO) {
+            tryRun {
+                val local = repo.local()
+                AppDatabase.INSTANCE.localRepoDao().insert(local)
+                AppDatabase.INSTANCE.traceDao().insert(
+                    TraceEntity(
+                        repoId = local.id,
+                        type = "repo",
+                        time = Date()
+                    )
+                )
             } catchAll {
                 it.asString().toastOnUIThread()
             }

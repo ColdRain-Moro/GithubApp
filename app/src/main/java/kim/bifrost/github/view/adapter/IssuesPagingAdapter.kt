@@ -16,7 +16,7 @@ import kim.bifrost.lib_common.utils.asString
  * @author 寒雨
  * @since 2022/7/20 11:36
  */
-class IssuesPagingAdapter(context: Context, private val repoFullName: String? = null) : BasePagingAdapter<ItemIssueBinding, Issue>(context) {
+class IssuesPagingAdapter(private val repoFullName: String? = null) : BasePagingAdapter<ItemIssueBinding, Issue>() {
     override fun getDataBinding(parent: ViewGroup, viewType: Int): ItemIssueBinding {
         return ItemIssueBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     }

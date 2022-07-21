@@ -29,7 +29,7 @@ open class BaseItemCallback<T>(
      * 默认实现这个方法有一定的好处，避免每次刷新时都与缓存互换
      */
     override fun getChangePayload(oldItem: T, newItem: T): Any {
-        return "" // 这里只要不传入 null 就可以了
+        return "123" // 这里只要不传入 null 就可以了
     }
 }
 

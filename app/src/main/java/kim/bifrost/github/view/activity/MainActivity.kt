@@ -102,6 +102,11 @@ class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>() {
                             ItemListActivity.start(this@MainActivity, ItemListActivity.Type.BOOKMARKS, viewModel.user.value!!.name)
                         }
                     }
+                    R.id.nav_trace -> {
+                        if (viewModel.user.value != null) {
+                            ItemListActivity.start(this@MainActivity, ItemListActivity.Type.TRACE, viewModel.user.value!!.name)
+                        }
+                    }
                 }
                 true
             }

@@ -1,7 +1,6 @@
 package kim.bifrost.github.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.paging.LoadState
@@ -13,7 +12,6 @@ import kim.bifrost.github.view.viewmodel.CommitViewModel
 import kim.bifrost.github.view.viewmodel.RepoViewModel
 import kim.bifrost.lib_common.base.ui.AutoWired
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindFragment
-import kim.bifrost.lib_common.extensions.TAG
 import kim.bifrost.lib_common.extensions.asString
 import kim.bifrost.lib_common.extensions.toJson
 import kim.bifrost.lib_common.extensions.toast

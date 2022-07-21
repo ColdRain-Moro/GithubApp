@@ -2,6 +2,8 @@ package kim.bifrost.lib_common.extensions
 
 import android.widget.Toast
 import kim.bifrost.lib_common.BaseApp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * ...
@@ -20,3 +22,5 @@ fun toastLong(s: CharSequence) {
 
 fun String.toast() = toast(this)
 fun String.toastLong() = toastLong(this)
+
+suspend fun String.toastOnUIThread() = withContext(Dispatchers.Main) { toast() }

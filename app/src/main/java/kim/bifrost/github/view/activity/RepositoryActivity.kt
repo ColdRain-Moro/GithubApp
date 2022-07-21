@@ -119,6 +119,9 @@ class RepositoryActivity : BaseVmBindActivity<RepoViewModel, ActivityRepoBinding
             R.id.action_branch -> {
                 showBranchSelectDialog()
             }
+            R.id.action_bookmark -> {
+                viewModel.addToBookmark()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

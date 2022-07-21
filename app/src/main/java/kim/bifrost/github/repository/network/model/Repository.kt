@@ -3,6 +3,8 @@ package kim.bifrost.github.repository.network.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kim.bifrost.github.repository.database.dao.LocalRepoDao
+import kim.bifrost.github.repository.database.entity.LocalRepoEntity
 import kotlinx.parcelize.Parcelize
 import java.io.Serializable
 import java.util.*
@@ -244,5 +246,17 @@ data class Repository(
         val pull: Boolean,
         @SerializedName("push")
         val push: Boolean
+    )
+
+    fun local(): LocalRepoEntity = LocalRepoEntity(
+        id = id,
+        owner = owner.login,
+        avatarUrl = owner.avatarUrl,
+        name = name,
+        desc = description,
+        star = stargazersCount,
+        forks = forksCount,
+        language = language,
+        languageColor = languageColor
     )
 }

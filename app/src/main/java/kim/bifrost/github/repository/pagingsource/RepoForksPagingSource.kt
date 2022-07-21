@@ -1,11 +1,11 @@
-package kim.bifrost.github.repository.network.pagingsource
+package kim.bifrost.github.repository.pagingsource
 
 import kim.bifrost.github.repository.network.api.RepoService
 import kim.bifrost.github.repository.network.model.Repository
 import kim.bifrost.lib_common.base.adapter.BasePagingSource
 
 /**
- * kim.bifrost.github.repository.network.pagingsource.RepoForksPagingSource
+ * kim.bifrost.github.repository.pagingsource.RepoForksPagingSource
  * GitHubApp
  *
  * @author 寒雨

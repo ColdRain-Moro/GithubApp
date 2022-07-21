@@ -1,6 +1,11 @@
 package kim.bifrost.github
 
+import android.os.Handler
+import android.os.Looper
 import kim.bifrost.lib_common.BaseApp
+import kim.bifrost.lib_common.extensions.asString
+import kim.bifrost.lib_common.extensions.toast
+import java.lang.Exception
 
 /**
  * kim.bifrost.github.GitHubApp
@@ -12,5 +17,16 @@ import kim.bifrost.lib_common.BaseApp
 class GitHubApp : BaseApp() {
     override fun onCreate() {
         super.onCreate()
+        // 全局抓取异常
+        Handler(mainLooper).post {
+            while (true) {
+                try {
+                    Looper.loop()
+                } catch (e: Exception) {
+                    e.asString().toast()
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 }

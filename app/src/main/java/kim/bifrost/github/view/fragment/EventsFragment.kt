@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import kim.bifrost.github.databinding.FragmentRvBinding
+import kim.bifrost.github.view.activity.RepositoryActivity
 import kim.bifrost.github.view.adapter.EventsPagingAdapter
 import kim.bifrost.github.view.viewmodel.EventsViewModel
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindFragment
 import kim.bifrost.lib_common.extensions.asString
 import kim.bifrost.lib_common.extensions.toast
+import kotlinx.coroutines.launch
 
 /**
  * kim.bifrost.github.view.fragment.NewsFragment
@@ -36,10 +39,16 @@ class EventsFragment : BaseVmBindFragment<EventsViewModel, FragmentRvBinding>() 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val eventsAdapter = EventsPagingAdapter(requireContext()) { event ->
+            viewModel.getRepoFlow(event.repo.name).collectLaunch {
+                RepositoryActivity.start(requireContext(), it)
+            }
+        }
         viewModel.eventsData.collectLaunch {
-            val eventsAdapter = EventsPagingAdapter(requireContext())
-            binding.rvEvents.layoutManager = LinearLayoutManager(requireContext())
-            binding.rvEvents.adapter = eventsAdapter
+            binding.rvEvents.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter = eventsAdapter
+            }
             eventsAdapter.addLoadStateListener { state ->
                 when (state.refresh) {
                     is LoadState.Loading -> binding.srlEvents.isRefreshing = true

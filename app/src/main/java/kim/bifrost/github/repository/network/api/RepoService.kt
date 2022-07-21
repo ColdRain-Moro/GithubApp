@@ -17,6 +17,19 @@ import retrofit2.http.*
 interface RepoService {
 
     /**
+     * 获取仓库
+     *
+     * @param owner
+     * @param repo
+     * @return
+     */
+    @GET("/repos/{owner}/{repo}")
+    suspend fun getRepo(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Repository
+
+    /**
      * 获取指定用户仓库列表
      * 鉴权不通过的话只会返回public的仓库
      *
@@ -252,6 +265,13 @@ interface RepoService {
         @Path("repo") repo: String
     ): Response<ResponseBody>
 
+    /**
+     * 获取所有branch
+     *
+     * @param owner
+     * @param repo
+     * @return
+     */
     @GET("repos/{owner}/{repo}/branches")
     suspend fun getBranches(
         @Path("owner") owner: String?,

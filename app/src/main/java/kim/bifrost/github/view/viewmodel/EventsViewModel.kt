@@ -5,10 +5,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import kim.bifrost.github.repository.network.pagingsource.NewsPagingSource
-import kim.bifrost.github.repository.network.pagingsource.RepositoryEventsPagingSource
-import kim.bifrost.github.repository.network.pagingsource.UserProfilePagingSource
+import kim.bifrost.github.repository.network.api.RepoService
+import kim.bifrost.github.repository.pagingsource.NewsPagingSource
+import kim.bifrost.github.repository.pagingsource.RepositoryEventsPagingSource
+import kim.bifrost.github.repository.pagingsource.UserProfilePagingSource
 import kim.bifrost.github.view.fragment.EventsFragment
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 /**
  * kim.bifrost.github.view.viewmodel.NewsViewModel
@@ -37,5 +40,15 @@ class EventsViewModel(
                 }
             }
         ).flow.cachedIn(viewModelScope)
+    }
+
+    fun getRepoFlow(fullName: String) = flow {
+        val (name, repo) = fullName.split("/")
+        emit(RepoService.getRepo(name, repo))
+    }.map { repo ->
+        repo.language?.let {
+            repo.languageColor = RepoService.getLanguageColor(repo.language).data?.hex
+        }
+        return@map repo
     }
 }

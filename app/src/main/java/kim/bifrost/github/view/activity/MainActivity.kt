@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
 import kim.bifrost.github.R
 import kim.bifrost.github.databinding.ActivityMainBinding
+import kim.bifrost.github.user.UserManager
 import kim.bifrost.github.view.fragment.EventsFragment
 import kim.bifrost.github.view.fragment.RepositoriesFragment
 import kim.bifrost.github.view.viewmodel.MainViewModel
@@ -94,6 +95,11 @@ class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>() {
                     R.id.nav_issues -> {
                         if (viewModel.user.value != null) {
                             IssuesActivity.start(this@MainActivity, IssuesActivity.Type.USER)
+                        }
+                    }
+                    R.id.nav_bookmarks -> {
+                        if (viewModel.user.value != null) {
+                            ItemListActivity.start(this@MainActivity, ItemListActivity.Type.BOOKMARKS, viewModel.user.value!!.name)
                         }
                     }
                 }

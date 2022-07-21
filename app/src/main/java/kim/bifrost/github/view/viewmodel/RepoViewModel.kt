@@ -5,10 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kim.bifrost.github.repository.database.AppDatabase
+import kim.bifrost.github.repository.database.entity.BookmarksEntity
 import kim.bifrost.github.repository.network.api.RepoService
 import kim.bifrost.github.repository.network.model.Branch
 import kim.bifrost.github.repository.network.model.Repository
-import kim.bifrost.lib_common.extensions.TAG
+import kim.bifrost.lib_common.extensions.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -28,9 +31,26 @@ class RepoViewModel : ViewModel() {
         get() = _currentBranch
     val starred: LiveData<Boolean>
         get() = _starred
-    val readme by lazy {
-        flow {
-            emit(RepoService.getRepoReadme(repo.owner.login, repo.name, _currentBranch.value))
+
+    fun getReadme() = flow {
+        emit(RepoService.getRepoReadme(repo.owner.login, repo.name, _currentBranch.value))
+    }
+
+    fun addToBookmark() {
+        viewModelScope.launch(Dispatchers.IO) {
+            tryRun {
+                val local = repo.local()
+                AppDatabase.INSTANCE.localRepoDao().insert(local)
+                AppDatabase.INSTANCE.bookmarksDao().insert(
+                    BookmarksEntity(
+                        repoId = local.id,
+                        type = "repo",
+                    )
+                )
+                "Successfully added into your bookmarks".toastOnUIThread()
+            } catchAll {
+                it.asString().toastOnUIThread()
+            }
         }
     }
 
@@ -53,17 +73,9 @@ class RepoViewModel : ViewModel() {
     fun setStarred(starred: Boolean) {
         viewModelScope.launch {
             val success = if (starred) {
-                RepoService.starRepo(repo.owner.login, repo.name).code().also {
-                    Log.d(
-                        TAG,
-                        "star: $it"
-                    ) } == 204
+                RepoService.starRepo(repo.owner.login, repo.name).code() == 204
             } else {
-                RepoService.unstarRepo(repo.owner.login, repo.name).code().also {
-                    Log.d(
-                        TAG,
-                        "unstar: $it"
-                    ) } == 204
+                RepoService.unstarRepo(repo.owner.login, repo.name).code() == 204
             }
             if (success) {
                 _starred.value = starred

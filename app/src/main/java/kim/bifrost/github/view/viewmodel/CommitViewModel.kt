@@ -7,7 +7,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import kim.bifrost.github.repository.network.model.Commit
-import kim.bifrost.github.repository.network.pagingsource.CommitPagingSource
+import kim.bifrost.github.repository.pagingsource.CommitPagingSource
 import kotlinx.coroutines.flow.Flow
 
 /**

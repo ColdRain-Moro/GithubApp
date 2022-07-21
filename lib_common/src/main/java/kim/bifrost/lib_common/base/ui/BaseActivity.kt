@@ -99,7 +99,7 @@ abstract class BaseActivity(
      */
     fun <T> Flow<T>.collectLaunch(action: suspend (value: T) -> Unit) {
         lifecycleScope.launch {
-            flowWithLifecycle(lifecycle).collect { action.invoke(it) }
+            collect { action.invoke(it) }
         }
     }
 }

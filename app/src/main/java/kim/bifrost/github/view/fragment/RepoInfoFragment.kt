@@ -15,6 +15,7 @@ import kim.bifrost.lib_common.extensions.invisible
 import kim.bifrost.lib_common.extensions.toast
 import kim.bifrost.lib_common.utils.asEnglishString
 import kim.bifrost.lib_common.utils.getNewsTimeStr
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import okio.ByteString.Companion.decodeBase64
 
@@ -28,6 +29,7 @@ import okio.ByteString.Companion.decodeBase64
 class RepoInfoFragment : BaseBindFragment<FragmentRepoInfoBinding>() {
 
     private val viewModel by viewModels<RepoViewModel>(ownerProducer = { requireActivity() })
+    private lateinit var readmeJob: Job
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,11 +52,22 @@ class RepoInfoFragment : BaseBindFragment<FragmentRepoInfoBinding>() {
             llForks.setOnClickListener {
                 ItemListActivity.start(requireContext(), ItemListActivity.Type.REPO_FORKS, viewModel.repo.owner.login, viewModel.repo.name)
             }
-            viewModel.readme.catch {
+            readmeJob = viewModel.getReadme().catch {
                 cardReadme.gone()
             }.collectLaunch {
                 tvReadme.renderMarkdown((it.content!!.decodeBase64() ?: return@collectLaunch let{ "base64解码失败".toast() }).utf8())
                 readmeLoader.invisible()
+            }
+            viewModel.currentBranch.observe(viewLifecycleOwner) {
+                // 关流
+                readmeJob.cancel()
+                // 重开
+                readmeJob = viewModel.getReadme().catch {
+                    cardReadme.gone()
+                }.collectLaunch {
+                    tvReadme.renderMarkdown((it.content!!.decodeBase64() ?: return@collectLaunch let{ "base64解码失败".toast() }).utf8())
+                    readmeLoader.invisible()
+                }
             }
         }
     }

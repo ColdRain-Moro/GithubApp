@@ -5,9 +5,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import kim.bifrost.github.repository.network.pagingsource.*
+import kim.bifrost.github.repository.network.api.RepoService
+import kim.bifrost.github.repository.pagingsource.*
 import kim.bifrost.github.view.activity.ItemListActivity
-import kim.bifrost.github.view.fragment.EventsFragment
+import kotlinx.coroutines.flow.flow
 
 /**
  * kim.bifrost.github.view.viewmodel.PeopleListViewModel
@@ -55,5 +56,25 @@ class ListViewModel(
                 }
             }
         ).flow.cachedIn(viewModelScope)
+    }
+
+    val localRepoPagingSource by lazy {
+        Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false,
+                initialLoadSize = 20
+            ),
+            pagingSourceFactory = {
+                when (type) {
+                    ItemListActivity.Type.BOOKMARKS -> BookmarksPagingSource()
+                    else -> throw IllegalArgumentException("type is not supported")
+                }
+            }
+        ).flow.cachedIn(viewModelScope)
+    }
+
+    fun getRepoFlow(owner: String, repo: String) = flow {
+        emit(RepoService.getRepo(owner, repo))
     }
 }

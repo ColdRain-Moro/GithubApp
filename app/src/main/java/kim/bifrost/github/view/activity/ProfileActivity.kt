@@ -72,7 +72,6 @@ class ProfileActivity : BaseVmBindActivity<ProfileViewModel, ActivityProfileBind
                 }
             }
         }
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

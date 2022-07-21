@@ -15,6 +15,7 @@ dependCoroutines()
 dependGlide()
 dependLifecycleKtx()
 dependPaging()
+dependRoom()
 dependModule(":lib_common")
 
 dependencies {

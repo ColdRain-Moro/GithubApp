@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import kim.bifrost.github.repository.network.pagingsource.*
+import kim.bifrost.github.repository.pagingsource.*
 import kim.bifrost.github.view.fragment.IssuesFragment
 
 /**

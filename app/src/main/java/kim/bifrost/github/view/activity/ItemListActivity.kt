@@ -10,6 +10,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import kim.bifrost.github.databinding.ActivityListBinding
+import kim.bifrost.github.view.adapter.BookmarksPagingAdapter
 import kim.bifrost.github.view.adapter.RepositoriesPagingAdapter
 import kim.bifrost.github.view.adapter.UserListPagingAdapter
 import kim.bifrost.github.view.viewmodel.ListViewModel
@@ -48,6 +49,7 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
                     Type.REPO_STARGAZERS -> "Stargazers"
                     Type.REPO_WATCHERS -> "Watchers"
                     Type.REPO_FORKS -> "Forks"
+                    Type.BOOKMARKS -> "Bookmarks"
                 }
                 it.subtitle = if (type.toString().startsWith("REPO_")) "$user/$repo" else user
                 it.setDisplayHomeAsUpEnabled(true)
@@ -85,6 +87,23 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
                         adapter.submitData(it)
                     }
                 }
+                Type.BOOKMARKS -> {
+                    viewModel.localRepoPagingSource.collectLaunch {
+                        val adapter = BookmarksPagingAdapter(this@ItemListActivity) { e ->
+                            if (e.entity.type == "repo") {
+                                viewModel.getRepoFlow(e.repo!!.owner, e.repo.name)
+                                    .collectLaunch { repo ->
+                                        RepositoryActivity.start(this@ItemListActivity, repo)
+                                    }
+                            } else {
+                                ProfileActivity.start(this@ItemListActivity, e.user!!.name)
+                            }
+                        }
+                        rv.adapter = adapter
+                        initAdapter()
+                        adapter.submitData(it)
+                    }
+                }
             }
         }
     }
@@ -112,7 +131,8 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
         USER_REPOSITORIES,
         REPO_STARGAZERS,
         REPO_WATCHERS,
-        REPO_FORKS
+        REPO_FORKS,
+        BOOKMARKS,
     }
 
     companion object {

@@ -29,6 +29,7 @@
         <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/ic_menu_trace.xml" value="0.138" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/ic_menu_trending.xml" value="0.138" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/ic_search_title.xml" value="0.138" />
+        <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/ic_sort_title.xml" value="0.1475" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/ic_star_title.xml" value="0.1475" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/ic_topic.xml" value="0.138" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/drawable/side_nav_bar.xml" value="0.138" />
@@ -40,6 +41,7 @@
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/activity_people_list.xml" value="0.2767210144927536" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/activity_profile.xml" value="0.2509057971014493" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/activity_repo.xml" value="0.2767210144927536" />
+        <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/activity_search.xml" value="0.24375" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/activity_web.xml" value="0.2767210144927536" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/fragment_commit.xml" value="0.2767210144927536" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/fragment_events.xml" value="0.12447916666666667" />
@@ -65,6 +67,7 @@
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/nav_layout.xml" value="0.2509057971014493" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/menu/menu_profile.xml" value="0.3234375" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/menu/menu_repository.xml" value="0.32447916666666665" />
+        <entry key="..\:/project/android/GithubApp/app/src/main/res/menu/menu_search.xml" value="0.3234375" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/menu/nav_menu.xml" value="0.1" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.138" />
       </map>

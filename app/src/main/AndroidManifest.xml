@@ -58,6 +58,9 @@
         <activity android:name=".view.activity.IssuesActivity"
             android:exported="true">
         </activity>
+        <activity android:name=".view.activity.SearchActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

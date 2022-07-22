@@ -1,8 +1,11 @@
 package kim.bifrost.github.repository.pagingsource
 
+import android.util.Log
 import kim.bifrost.github.repository.database.AppDatabase
 import kim.bifrost.github.view.adapter.TraceItem
 import kim.bifrost.lib_common.base.adapter.BasePagingSource
+import kim.bifrost.lib_common.extensions.TAG
+import kotlinx.coroutines.flow.collectLatest
 import java.util.*
 import java.util.concurrent.TimeUnit
 

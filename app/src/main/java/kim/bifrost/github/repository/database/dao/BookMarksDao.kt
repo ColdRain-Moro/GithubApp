@@ -29,4 +29,10 @@ interface BookMarksDao {
 
     @Query("DELETE FROM bookmarks")
     suspend fun delete()
+
+    @Query("DELETE FROM bookmarks WHERE repo_id = :repoId")
+    suspend fun deleteByRepoId(repoId: Int)
+
+    @Query("DELETE FROM bookmarks WHERE user_id = :userId")
+    suspend fun deleteByUserId(userId: Int)
 }

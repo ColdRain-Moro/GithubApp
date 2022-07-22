@@ -1,8 +1,10 @@
 package kim.bifrost.github.repository.database.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import kim.bifrost.github.repository.database.entity.LocalRepoEntity
 import kim.bifrost.github.repository.database.entity.LocalUserEntity
 
 /**
@@ -17,4 +19,7 @@ interface LocalUserDao {
     // 冲突时会替换掉
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: LocalUserEntity)
+
+    @Delete
+    suspend fun delete(entity: LocalUserEntity)
 }

@@ -71,4 +71,18 @@
     <string name="releases">Releases</string>
     <string name="wiki">Wiki</string>
     <string name="bookmark">Bookmark</string>
+    <string name="sort">Sort</string>
+    <string name="best_match">Best match</string>
+    <string name="most_stars">Most stars</string>
+    <string name="fewest_stars">Fewest stars</string>
+    <string name="most_forks">Most forks</string>
+    <string name="fewest_forks">Fewest forks</string>
+    <string name="recently_updated">Recently updated</string>
+    <string name="last_recently_updated">Last recently updated</string>
+    <string name="most_followers">Most followers</string>
+    <string name="fewest_followers">Fewest followers</string>
+    <string name="most_recently_joined">Most recently joined</string>
+    <string name="least_recently_joined">Least recently joined</string>
+    <string name="most_repositories">Most repositories</string>
+    <string name="fewest_repositories">Fewest repositories</string>
 </resources>

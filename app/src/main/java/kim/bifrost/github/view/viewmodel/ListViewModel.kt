@@ -5,10 +5,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import kim.bifrost.github.repository.database.AppDatabase
+import kim.bifrost.github.repository.database.entity.BookmarksQueryResult
 import kim.bifrost.github.repository.network.api.RepoService
 import kim.bifrost.github.repository.pagingsource.*
 import kim.bifrost.github.view.activity.ItemListActivity
-import kotlinx.coroutines.flow.flow
+import kim.bifrost.github.view.adapter.TraceItem
+import kim.bifrost.lib_common.extensions.catchAll
+import kim.bifrost.lib_common.extensions.tryRun
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 /**
  * kim.bifrost.github.view.viewmodel.PeopleListViewModel
@@ -88,6 +94,50 @@ class ListViewModel(
                 }
             }
         ).flow.cachedIn(viewModelScope)
+    }
+
+    fun removeTraceItem(item: TraceItem): Flow<Result<Unit>> {
+        return flow<Result<Unit>> {
+            tryRun {
+                when (item) {
+                    is TraceItem.User -> {
+                        AppDatabase.INSTANCE.traceDao().deleteByUserId(item.user.id)
+                        AppDatabase.INSTANCE.localUserDao().delete(item.user)
+                        emit(Result.success(Unit))
+                    }
+                    is TraceItem.Repo -> {
+                        AppDatabase.INSTANCE.traceDao().deleteByRepoId(item.repo.id)
+                        AppDatabase.INSTANCE.localRepoDao().delete(item.repo)
+                        emit(Result.success(Unit))
+                    }
+                    else -> {}
+                }
+            } catchAll {
+                emit(Result.failure(it))
+            }
+        }.shareIn(viewModelScope, started = SharingStarted.Lazily, 1)
+    }
+
+    fun removeBookmarksItem(item: BookmarksQueryResult): Flow<Result<Unit>> {
+        return flow<Result<Unit>> {
+            tryRun {
+                when (item.entity.type) {
+                    "user" -> {
+                        AppDatabase.INSTANCE.traceDao().deleteByUserId(item.user!!.id)
+                        AppDatabase.INSTANCE.localUserDao().delete(item.user)
+                        emit(Result.success(Unit))
+                    }
+                    "repo" -> {
+                        AppDatabase.INSTANCE.traceDao().deleteByRepoId(item.repo!!.id)
+                        AppDatabase.INSTANCE.localRepoDao().delete(item.repo)
+                        emit(Result.success(Unit))
+                    }
+                    else -> {}
+                }
+            } catchAll {
+                emit(Result.failure(it))
+            }
+        }.shareIn(viewModelScope, started = SharingStarted.Lazily, 1)
     }
 
     fun getRepoFlow(owner: String, repo: String) = flow {

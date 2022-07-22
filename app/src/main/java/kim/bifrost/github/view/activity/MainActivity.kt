@@ -22,7 +22,7 @@ import kim.bifrost.lib_common.extensions.ifNullOrEmpty
 import kim.bifrost.lib_common.utils.asString
 import kotlinx.coroutines.launch
 
-class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>() {
+class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>(isCancelStatusBar = false) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbar)
@@ -99,13 +99,16 @@ class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>() {
                     }
                     R.id.nav_bookmarks -> {
                         if (viewModel.user.value != null) {
-                            ItemListActivity.start(this@MainActivity, ItemListActivity.Type.BOOKMARKS, viewModel.user.value!!.name)
+                            ItemListActivity.start(this@MainActivity, ItemListActivity.Type.BOOKMARKS, viewModel.user.value!!.login)
                         }
                     }
                     R.id.nav_trace -> {
                         if (viewModel.user.value != null) {
-                            ItemListActivity.start(this@MainActivity, ItemListActivity.Type.TRACE, viewModel.user.value!!.name)
+                            ItemListActivity.start(this@MainActivity, ItemListActivity.Type.TRACE, viewModel.user.value!!.login)
                         }
+                    }
+                    R.id.nav_search -> {
+                        SearchActivity.start(this@MainActivity)
                     }
                 }
                 true

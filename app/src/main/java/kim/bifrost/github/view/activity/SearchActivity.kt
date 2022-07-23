@@ -34,6 +34,10 @@ class SearchActivity : BaseVmBindActivity<SearchViewModel, ActivitySearchBinding
             android.R.id.home -> {
                 finish()
             }
+            R.id.action_bast_match -> {
+                viewModel.changeRepoSort(null)
+                viewModel.changeUserSort(null)
+            }
         }
         return super.onOptionsItemSelected(item)
     }

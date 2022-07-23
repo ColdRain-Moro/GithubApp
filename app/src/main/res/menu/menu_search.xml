@@ -13,12 +13,11 @@
         android:title="@string/sort"
         app:showAsAction="always">
         <menu>
-
+            <item
+                android:id="@+id/action_bast_match"
+                android:title="@string/best_match"/>
             <group
                 android:id="@+id/group_repo">
-                <item
-                    android:id="@+id/action_bast_match"
-                    android:title="@string/best_match"/>
                 <item
                     android:id="@+id/action_most_stars"
                     android:title="@string/most_stars"/>

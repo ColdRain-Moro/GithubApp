@@ -1,6 +1,9 @@
 package kim.bifrost.github.repository.database.dao
 
+import androidx.paging.PagingSource
 import androidx.room.*
+import kim.bifrost.github.repository.database.entity.BookmarksEntity
+import kim.bifrost.github.repository.database.entity.BookmarksQueryResult
 import kim.bifrost.github.repository.database.entity.TraceEntity
 import kim.bifrost.github.repository.database.entity.TraceQueryResult
 import kotlinx.coroutines.flow.Flow
@@ -22,10 +25,6 @@ interface TraceDao {
     @Query("SELECT * FROM trace WHERE time > :time - :duration and time < :time ORDER BY time DESC")
     suspend fun queryByDate(time: Long, duration: Long): List<TraceQueryResult>
 
-    @Transaction
-    @Query("SELECT * FROM trace WHERE time > :time - :duration and time < :time ORDER BY time DESC")
-    fun query(time: Long, duration: Long): Flow<List<TraceQueryResult>>
-
     // 冲突时会替换掉
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: TraceEntity)
@@ -38,4 +37,14 @@ interface TraceDao {
 
     @Query("DELETE FROM trace WHERE user_id = :userId")
     suspend fun deleteByUserId(userId: Int)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(users: List<TraceEntity>)
+
+    @Transaction
+    @Query("SELECT * FROM trace")
+    fun pagingSource(): PagingSource<Int, TraceQueryResult>
+
+    @Query("DELETE FROM trace")
+    suspend fun clearAll()
 }

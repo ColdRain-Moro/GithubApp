@@ -23,7 +23,7 @@ data class LocalRepoEntity(
     @ColumnInfo(name = "avatar_url", typeAffinity = ColumnInfo.TEXT)
     val avatarUrl: String,
     val name: String,
-    val desc: String,
+    val desc: String?,
     val star: Int,
     val forks: Int,
     val language: String?,

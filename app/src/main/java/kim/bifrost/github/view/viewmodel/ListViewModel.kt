@@ -2,11 +2,10 @@ package kim.bifrost.github.view.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
+import androidx.paging.*
 import kim.bifrost.github.repository.database.AppDatabase
 import kim.bifrost.github.repository.database.entity.BookmarksQueryResult
+import kim.bifrost.github.repository.database.entity.TraceQueryResult
 import kim.bifrost.github.repository.network.api.RepoService
 import kim.bifrost.github.repository.pagingsource.*
 import kim.bifrost.github.view.activity.ItemListActivity
@@ -15,6 +14,8 @@ import kim.bifrost.lib_common.extensions.catchAll
 import kim.bifrost.lib_common.extensions.tryRun
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * kim.bifrost.github.view.viewmodel.PeopleListViewModel
@@ -73,7 +74,7 @@ class ListViewModel(
             ),
             pagingSourceFactory = {
                 when (type) {
-                    ItemListActivity.Type.BOOKMARKS -> BookmarksPagingSource()
+                    ItemListActivity.Type.BOOKMARKS -> AppDatabase.INSTANCE.bookmarksDao().pagingSource()
                     else -> throw IllegalArgumentException("type is not supported")
                 }
             }
@@ -81,6 +82,9 @@ class ListViewModel(
     }
 
     val tracePagingSource by lazy {
+        var date: Int
+        var month: Int
+        var year: Int
         Pager(
             config = PagingConfig(
                 pageSize = 20,
@@ -89,11 +93,44 @@ class ListViewModel(
             ),
             pagingSourceFactory = {
                 when (type) {
-                    ItemListActivity.Type.TRACE -> TracePagingSource()
+                    ItemListActivity.Type.TRACE -> AppDatabase.INSTANCE.traceDao().pagingSource()
                     else -> throw IllegalArgumentException("type is not supported")
                 }
             }
-        ).flow.cachedIn(viewModelScope)
+        ).flow.map {
+            // 每次刷新初始化一次值
+            date = 0
+            month = 0
+            year = 0
+            it.insertSeparators { _, after ->
+                if (after != null
+                    && (date != after.entity.time.date
+                        || month != after.entity.time.month
+                        || year != after.entity.time.year)
+                ) {
+                    date = after.entity.time.date
+                    month = after.entity.time.month
+                    year = after.entity.time.year
+                    return@insertSeparators TraceItem.Divider(after.entity.time)
+                }
+                return@insertSeparators null
+            }.map { res ->
+                 if (res is TraceItem.Divider) {
+                     res
+                 } else {
+                    res as TraceQueryResult
+                    when (res.entity.type) {
+                        "repo" -> {
+                            TraceItem.Repo(res.repo!!)
+                        }
+                        "user" -> {
+                            TraceItem.User(res.user!!)
+                        }
+                        else -> error("type is not supported")
+                    }
+                }
+            }
+        }.cachedIn(viewModelScope)
     }
 
     fun removeTraceItem(item: TraceItem): Flow<Result<Unit>> {
@@ -123,12 +160,12 @@ class ListViewModel(
             tryRun {
                 when (item.entity.type) {
                     "user" -> {
-                        AppDatabase.INSTANCE.traceDao().deleteByUserId(item.user!!.id)
+                        AppDatabase.INSTANCE.bookmarksDao().deleteByUserId(item.user!!.id)
                         AppDatabase.INSTANCE.localUserDao().delete(item.user)
                         emit(Result.success(Unit))
                     }
                     "repo" -> {
-                        AppDatabase.INSTANCE.traceDao().deleteByRepoId(item.repo!!.id)
+                        AppDatabase.INSTANCE.bookmarksDao().deleteByRepoId(item.repo!!.id)
                         AppDatabase.INSTANCE.localRepoDao().delete(item.repo)
                         emit(Result.success(Unit))
                     }

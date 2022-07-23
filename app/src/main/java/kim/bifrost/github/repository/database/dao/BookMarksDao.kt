@@ -1,5 +1,6 @@
 package kim.bifrost.github.repository.database.dao
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import kim.bifrost.github.repository.database.entity.BookmarksEntity
 import kim.bifrost.github.repository.database.entity.BookmarksQueryResult
@@ -35,4 +36,14 @@ interface BookMarksDao {
 
     @Query("DELETE FROM bookmarks WHERE user_id = :userId")
     suspend fun deleteByUserId(userId: Int)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(users: List<BookmarksEntity>)
+
+    @Transaction
+    @Query("SELECT * FROM bookmarks")
+    fun pagingSource(): PagingSource<Int, BookmarksQueryResult>
+
+    @Query("DELETE FROM bookmarks")
+    suspend fun clearAll()
 }

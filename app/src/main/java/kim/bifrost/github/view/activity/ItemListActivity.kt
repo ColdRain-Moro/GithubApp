@@ -219,7 +219,6 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
                 viewModel.removeBookmarksItem(data).collectLaunch {
                     it.onSuccess {
                         adapter.notifyItemRemoved(position)
-                        adapter.refresh()
                         Snackbar.make(binding.root, "Bookmark deleted", Snackbar.LENGTH_SHORT).show()
                     }.onFailure { e ->
                         e.asString().toast()

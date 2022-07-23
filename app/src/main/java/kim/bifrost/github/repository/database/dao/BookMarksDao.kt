@@ -41,7 +41,7 @@ interface BookMarksDao {
     suspend fun insertAll(users: List<BookmarksEntity>)
 
     @Transaction
-    @Query("SELECT * FROM bookmarks")
+    @Query("SELECT * FROM bookmarks ORDER BY time DESC")
     fun pagingSource(): PagingSource<Int, BookmarksQueryResult>
 
     @Query("DELETE FROM bookmarks")

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
+import kim.bifrost.annotations.AutoWired
 import kim.bifrost.github.R
 import kim.bifrost.github.databinding.ActivityRepoBinding
 import kim.bifrost.github.repository.network.model.Repository
@@ -23,7 +24,6 @@ import kim.bifrost.github.view.fragment.FilesFragment
 import kim.bifrost.github.view.fragment.RepoInfoFragment
 import kim.bifrost.github.view.viewmodel.RepoViewModel
 import kim.bifrost.lib_common.base.adapter.BaseVPAdapter
-import kim.bifrost.lib_common.base.ui.AutoWired
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindActivity
 import kim.bifrost.lib_common.extensions.argument
 import kim.bifrost.lib_common.extensions.drawable
@@ -39,13 +39,14 @@ import kim.bifrost.lib_common.extensions.toast
 class RepositoryActivity : BaseVmBindActivity<RepoViewModel, ActivityRepoBinding>() {
 
     @AutoWired
-    private lateinit var repo: Repository
+    lateinit var repo: Repository
 
     private lateinit var menu: Menu
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        inject()
         viewModel.repo = repo
         viewModel.addToTrace()
         binding.apply {

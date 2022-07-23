@@ -46,7 +46,8 @@ class ProfileViewModel : ViewModel() {
                     AppDatabase.INSTANCE.bookmarksDao().insert(
                         BookmarksEntity(
                             userId = user.value!!.id.toInt(),
-                            type = "user"
+                            type = "user",
+                            time = Date()
                         )
                     )
                     "Successfully added into your bookmarks".toast()

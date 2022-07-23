@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+include(":ksp_inject:annotations")
+
+
 pluginManagement {
     includeBuild("build-logic")
     repositories {
@@ -22,3 +25,4 @@ rootProject.name = "GitHubApp"
 
 include(":app")
 include(":lib_common")
+include(":ksp_inject")

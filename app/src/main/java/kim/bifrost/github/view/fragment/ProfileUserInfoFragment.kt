@@ -25,6 +25,7 @@ class ProfileUserInfoFragment : BaseBindFragment<FragmentUserInfoBinding>() {
     private val viewModel by activityViewModels<ProfileViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        inject()
         viewModel.user.collectLaunch { user ->
             if (user != null) {
                 binding.apply {

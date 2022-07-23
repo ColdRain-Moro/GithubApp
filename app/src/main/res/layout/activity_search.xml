@@ -21,8 +21,11 @@
             app:popupTheme="@style/Theme.Material3.Light" />
 
         <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            tools:visibility="visible"
+            android:visibility="gone"
             android:theme="@style/ThemeOverlay.AppCompat.Dark"
             app:popupTheme="@style/Theme.Material3.Light">
             <com.google.android.material.tabs.TabItem

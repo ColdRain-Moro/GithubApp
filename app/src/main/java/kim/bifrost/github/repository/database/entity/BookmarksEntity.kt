@@ -1,6 +1,7 @@
 package kim.bifrost.github.repository.database.entity
 
 import androidx.room.*
+import java.util.*
 
 /**
  * kim.bifrost.github.repository.database.entity.BookmarksEntity
@@ -21,6 +22,7 @@ data class BookmarksEntity(
     val userId: Int? = null,
     @ColumnInfo(name = "repo_id")
     val repoId: Int? = null,
+    val time: Date,
     // repo / user
     val type: String,
 )

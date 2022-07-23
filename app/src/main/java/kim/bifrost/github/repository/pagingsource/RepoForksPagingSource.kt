@@ -18,5 +18,12 @@ class RepoForksPagingSource(
 ) : BasePagingSource<Repository>() {
     override suspend fun getData(page: Int): List<Repository> {
         return RepoService.getRepositoryForks(owner, repo, page + 1, 20, sort)
+            // 请求颜色
+            .map { repo ->
+                repo.language?.let {
+                    repo.languageColor = RepoService.getLanguageColor(it).data?.hex
+                }
+                return@map repo
+            }
     }
 }

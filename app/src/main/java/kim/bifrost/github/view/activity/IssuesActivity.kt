@@ -5,13 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import com.google.android.material.tabs.TabLayoutMediator
+import kim.bifrost.annotations.AutoWired
 import kim.bifrost.github.databinding.ActivityIssuesBinding
 import kim.bifrost.github.repository.network.model.Repository
 import kim.bifrost.github.user.UserManager
+import kim.bifrost.github.utils.getValue
 import kim.bifrost.github.view.fragment.IssuesFragment
 import kim.bifrost.github.view.viewmodel.IssuesViewModel
 import kim.bifrost.lib_common.base.adapter.BaseVPAdapter
-import kim.bifrost.lib_common.base.ui.AutoWired
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindActivity
 import kim.bifrost.lib_common.extensions.argument
 
@@ -25,17 +26,19 @@ import kim.bifrost.lib_common.extensions.argument
 class IssuesActivity : BaseVmBindActivity<IssuesViewModel, ActivityIssuesBinding>(isCancelStatusBar = false) {
 
     @AutoWired
-    private lateinit var type: Type
+    lateinit var type: Type
     @AutoWired
-    private lateinit var repository: Repository
+    var repository: Repository? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        inject()
+        intent.getValue<String>("type")
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
             it.title = "Issues"
-            it.subtitle = if (type == Type.USER) UserManager.userTemp!!.login else repository.fullName
+            it.subtitle = if (type == Type.USER) UserManager.userTemp!!.login else repository!!.fullName
         }
         binding.vp2Issues.adapter = BaseVPAdapter(
             supportFragmentManager,
@@ -44,11 +47,11 @@ class IssuesActivity : BaseVmBindActivity<IssuesViewModel, ActivityIssuesBinding
         ) { _, i ->
             return@BaseVPAdapter when (i) {
                 0 -> if (type == Type.REPO)
-                    IssuesFragment.newInstance(IssuesFragment.Type.REPO_ISSUES, IssuesFragment.State.OPEN, repository.owner.login, repository.name)
+                    IssuesFragment.newInstance(IssuesFragment.Type.REPO_ISSUES, IssuesFragment.State.OPEN, repository!!.owner.login, repository!!.name)
                 else
                     IssuesFragment.newInstance(IssuesFragment.Type.MY_ISSUES, IssuesFragment.State.OPEN)
                 1 -> if (type == Type.REPO)
-                    IssuesFragment.newInstance(IssuesFragment.Type.REPO_ISSUES, IssuesFragment.State.CLOSED, repository.owner.login, repository.name)
+                    IssuesFragment.newInstance(IssuesFragment.Type.REPO_ISSUES, IssuesFragment.State.CLOSED, repository!!.owner.login, repository!!.name)
                 else
                     IssuesFragment.newInstance(IssuesFragment.Type.MY_ISSUES, IssuesFragment.State.CLOSED)
                 else -> throw IllegalArgumentException("$i")
@@ -69,6 +72,7 @@ class IssuesActivity : BaseVmBindActivity<IssuesViewModel, ActivityIssuesBinding
                 finish()
             }
         }
+
         return super.onOptionsItemSelected(item)
     }
 

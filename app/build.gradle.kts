@@ -32,6 +32,7 @@ dependPaging()
 dependRoomPaging()
 dependRoom()
 dependModule(":lib_common")
+dependModule(":ksp_inject:annotations")
 
 dependencies {
     // markdown解析
@@ -39,4 +40,5 @@ dependencies {
     implementation("io.noties.markwon:image-glide:4.6.2")
     implementation("io.noties.markwon:linkify:4.6.2")
     implementation("com.github.whataa:pandora:androidx_v2.1.0")
+    ksp(project(":ksp_inject"))
 }

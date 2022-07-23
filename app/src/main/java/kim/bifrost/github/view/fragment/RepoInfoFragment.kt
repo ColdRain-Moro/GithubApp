@@ -33,6 +33,7 @@ class RepoInfoFragment : BaseBindFragment<FragmentRepoInfoBinding>() {
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        inject()
         binding.apply {
             tvRepoName.text = viewModel.repo.fullName
             tvTime.text = "Created at ${viewModel.repo.createdAt.asEnglishString()}, last pushed at ${getNewsTimeStr(viewModel.repo.pushedAt)}"

@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import kim.bifrost.annotations.AutoWired
 import kim.bifrost.github.databinding.FragmentItemsBinding
 import kim.bifrost.github.view.adapter.IssuesPagingAdapter
 import kim.bifrost.github.view.viewmodel.IssuesFragViewModel
-import kim.bifrost.lib_common.base.ui.AutoWired
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindFragment
 import kim.bifrost.lib_common.extensions.asString
 import kim.bifrost.lib_common.extensions.toast
@@ -24,15 +24,16 @@ import kim.bifrost.lib_common.extensions.toast
 class IssuesFragment : BaseVmBindFragment<IssuesFragViewModel, FragmentItemsBinding>() {
 
     @AutoWired
-    private var user: String? = null
+    var user: String? = null
     @AutoWired
-    private var repo: String? = null
+    var repo: String? = null
     @AutoWired
-    private lateinit var type: Type
+    lateinit var type: Type
     @AutoWired
-    private lateinit var state: State
+    lateinit var state: State
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        inject()
         val adapter = IssuesPagingAdapter(if (type == Type.MY_ISSUES) null else user + repo)
         viewModel.pagingData.collectLaunch {
             adapter.submitData(it)

@@ -30,6 +30,7 @@ class RepositoriesFragment : BaseVmBindFragment<RepositoriesViewModel, FragmentR
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        inject()
         viewModel.userRepoData.collectLaunch {
             val adapter = RepositoriesPagingAdapter()
             binding.apply {

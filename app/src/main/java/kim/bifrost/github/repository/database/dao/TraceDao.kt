@@ -22,7 +22,7 @@ interface TraceDao {
     suspend fun queryAll(): List<TraceQueryResult>
 
     @Transaction
-    @Query("SELECT * FROM trace WHERE time > :time - :duration and time < :time ORDER BY time DESC")
+    @Query("SELECT * FROM trace WHERE time > :time - :duration and time < :time ORDER BY time ASC")
     suspend fun queryByDate(time: Long, duration: Long): List<TraceQueryResult>
 
     // 冲突时会替换掉
@@ -42,7 +42,7 @@ interface TraceDao {
     suspend fun insertAll(users: List<TraceEntity>)
 
     @Transaction
-    @Query("SELECT * FROM trace")
+    @Query("SELECT * FROM trace ORDER BY time DESC")
     fun pagingSource(): PagingSource<Int, TraceQueryResult>
 
     @Query("DELETE FROM trace")

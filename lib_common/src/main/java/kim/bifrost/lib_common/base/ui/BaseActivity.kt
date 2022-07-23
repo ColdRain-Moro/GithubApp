@@ -43,31 +43,31 @@ abstract class BaseActivity(
             cancelStatusBar()
         }
         // 进行依赖注入
-        inject()
+//        inject()
     }
 
-    private fun inject() {
-        ReflectClass(this::class.java).savingField.forEach {
-            if (it.isAnnotationPresent(AutoWired::class.java)) {
-                it.isAccessible = true
-                val annotation = it.getAnnotation(AutoWired::class.java)!!
-                val name = annotation.name.ifEmpty { it.name }
-                val value: Any? = when {
-                    it.type == String::class.java -> intent.getStringExtra(name)
-                    it.type == Int::class.java -> intent.getIntExtra(name, 0)
-                    it.type == Boolean::class.java -> intent.getBooleanExtra(name, false)
-                    it.type == Long::class.java -> intent.getLongExtra(name, 0)
-                    it.type == Float::class.java -> intent.getFloatExtra(name, 0f)
-                    it.type == Double::class.java -> intent.getDoubleExtra(name, 0.0)
-                    it.type.isEnum -> it.type.enumConstants.firstOrNull { e -> e.toString() == intent.getStringExtra(name)?.uppercase() }
-                    Parcelable::class.java.isAssignableFrom(it.type) -> intent.getParcelableExtra(name)
-                    Serializable::class.java.isAssignableFrom(it.type) -> intent.getSerializableExtra(name)
-                    else -> intent.getStringExtra(name)?.let { s -> gson.fromJson(s, it.type) }
-                }
-                it.set(this, value)
-            }
-        }
-    }
+//    private fun inject() {
+//        ReflectClass(this::class.java).savingField.forEach {
+//            if (it.isAnnotationPresent(AutoWired::class.java)) {
+//                it.isAccessible = true
+//                val annotation = it.getAnnotation(AutoWired::class.java)!!
+//                val name = annotation.name.ifEmpty { it.name }
+//                val value: Any? = when {
+//                    it.type == String::class.java -> intent.getStringExtra(name)
+//                    it.type == Int::class.java -> intent.getIntExtra(name, 0)
+//                    it.type == Boolean::class.java -> intent.getBooleanExtra(name, false)
+//                    it.type == Long::class.java -> intent.getLongExtra(name, 0)
+//                    it.type == Float::class.java -> intent.getFloatExtra(name, 0f)
+//                    it.type == Double::class.java -> intent.getDoubleExtra(name, 0.0)
+//                    it.type.isEnum -> it.type.enumConstants.firstOrNull { e -> e.toString() == intent.getStringExtra(name)?.uppercase() }
+//                    Parcelable::class.java.isAssignableFrom(it.type) -> intent.getParcelableExtra(name)
+//                    Serializable::class.java.isAssignableFrom(it.type) -> intent.getSerializableExtra(name)
+//                    else -> intent.getStringExtra(name)?.let { s -> gson.fromJson(s, it.type) }
+//                }
+//                it.set(this, value)
+//            }
+//        }
+//    }
 
     private fun cancelStatusBar() {
         val window = this.window
@@ -104,5 +104,5 @@ abstract class BaseActivity(
     }
 }
 
-@Target(AnnotationTarget.FIELD)
-annotation class AutoWired(val name: String = "")
+//@Target(AnnotationTarget.FIELD)
+//annotation class AutoWired(val name: String = "")

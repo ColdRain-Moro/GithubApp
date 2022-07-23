@@ -31,7 +31,7 @@ abstract class BaseFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        inject()
+//        inject()
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -44,27 +44,27 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
-    private fun inject() {
-        ReflectClass(this::class.java).savingField.forEach {
-            if (it.isAnnotationPresent(AutoWired::class.java)) {
-                it.isAccessible = true
-                val annotation = it.getAnnotation(AutoWired::class.java)!!
-                val name = annotation.name.ifEmpty { it.name }
-                val value: Any? = when {
-                    it.type == String::class.java -> arguments?.getString(name)
-                    it.type == Int::class.java -> arguments?.getInt(name, 0)
-                    it.type == Boolean::class.java -> arguments?.getBoolean(name, false)
-                    it.type == Long::class.java -> arguments?.getLong(name, 0)
-                    it.type == Float::class.java -> arguments?.getFloat(name, 0f)
-                    it.type == Double::class.java -> arguments?.getDouble(name, 0.0)
-                    it.type.isEnum -> it.type.enumConstants.firstOrNull { e -> e.toString() == arguments?.getString(name)?.uppercase() }
-                    Parcelable::class.java.isAssignableFrom(it.type) -> arguments?.getParcelable(name)
-                    Serializable::class.java.isAssignableFrom(it.type) -> arguments?.getSerializable(name)
-                    else -> arguments?.getString(name)?.let { s -> gson.fromJson(s, it.type) }
-                }
-                it.set(this, value)
-            }
-        }
-    }
+//    private fun inject() {
+//        ReflectClass(this::class.java).savingField.forEach {
+//            if (it.isAnnotationPresent(AutoWired::class.java)) {
+//                it.isAccessible = true
+//                val annotation = it.getAnnotation(AutoWired::class.java)!!
+//                val name = annotation.name.ifEmpty { it.name }
+//                val value: Any? = when {
+//                    it.type == String::class.java -> arguments?.getString(name)
+//                    it.type == Int::class.java -> arguments?.getInt(name, 0)
+//                    it.type == Boolean::class.java -> arguments?.getBoolean(name, false)
+//                    it.type == Long::class.java -> arguments?.getLong(name, 0)
+//                    it.type == Float::class.java -> arguments?.getFloat(name, 0f)
+//                    it.type == Double::class.java -> arguments?.getDouble(name, 0.0)
+//                    it.type.isEnum -> it.type.enumConstants.firstOrNull { e -> e.toString() == arguments?.getString(name)?.uppercase() }
+//                    Parcelable::class.java.isAssignableFrom(it.type) -> arguments?.getParcelable(name)
+//                    Serializable::class.java.isAssignableFrom(it.type) -> arguments?.getSerializable(name)
+//                    else -> arguments?.getString(name)?.let { s -> gson.fromJson(s, it.type) }
+//                }
+//                it.set(this, value)
+//            }
+//        }
+//    }
 
 }

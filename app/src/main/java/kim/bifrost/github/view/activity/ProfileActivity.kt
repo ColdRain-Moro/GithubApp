@@ -33,6 +33,7 @@ class ProfileActivity : BaseVmBindActivity<ProfileViewModel, ActivityProfileBind
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        inject()
         viewModel.userName = intent.getStringExtra("user")!!
         viewModel.getUser()
         binding.apply {

@@ -5,12 +5,12 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import kim.bifrost.annotations.AutoWired
 import kim.bifrost.github.databinding.FragmentCommitBinding
 import kim.bifrost.github.repository.network.model.Repository
 import kim.bifrost.github.view.adapter.CommitPagingAdapter
 import kim.bifrost.github.view.viewmodel.CommitViewModel
 import kim.bifrost.github.view.viewmodel.RepoViewModel
-import kim.bifrost.lib_common.base.ui.AutoWired
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindFragment
 import kim.bifrost.lib_common.extensions.asString
 import kim.bifrost.lib_common.extensions.toJson
@@ -27,13 +27,14 @@ import kotlinx.coroutines.Job
 class CommitFragment : BaseVmBindFragment<CommitViewModel, FragmentCommitBinding>() {
 
     @AutoWired
-    private lateinit var repo: Repository
+    lateinit var repo: Repository
 
     private val activityViewModel by activityViewModels<RepoViewModel>()
 
     private lateinit var currentPagingJob: Job
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        inject()
         val adapter = CommitPagingAdapter(requireContext())
         binding.rvCommit.apply {
             layoutManager = LinearLayoutManager(requireContext())

@@ -23,6 +23,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/build-logic" />
+            <option value="$PROJECT_DIR$/ksp_inject" />
+            <option value="$PROJECT_DIR$/ksp_inject/annotations" />
             <option value="$PROJECT_DIR$/lib_common" />
           </set>
         </option>

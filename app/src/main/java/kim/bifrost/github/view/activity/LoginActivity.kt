@@ -56,6 +56,7 @@ class LoginActivity : BaseVmBindActivity<LoginViewModel, ActivityLoginBinding>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val splashFragment = replaceFragment(R.id.splash_screen) {
             SplashFragment()
         }

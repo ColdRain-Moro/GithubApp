@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import kim.bifrost.github.repository.pagingsource.SearchRepoPagingSource
 import kim.bifrost.github.repository.pagingsource.SearchUserPagingSource
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 /**
   * kim.bifrost.github.view.viewmodel.SearhViewModel
@@ -20,6 +21,12 @@ class SearchViewModel : ViewModel() {
     // null -> bestMatch
     private val _userSort = MutableStateFlow<UserSort?>(null)
     private val _repoSort = MutableStateFlow<RepoSort?>(null)
+
+    val userSort: StateFlow<UserSort?>
+        get() = _userSort
+
+    val repoSort: StateFlow<RepoSort?>
+        get() = _repoSort
 
     val currentQuery: LiveData<String>
         get() = _currentQuery
@@ -44,7 +51,7 @@ class SearchViewModel : ViewModel() {
                 initialLoadSize = 20
             ),
             pagingSourceFactory = {
-                SearchRepoPagingSource({ _currentQuery.value!! }, { _repoSort.value?.sort }, { _repoSort.value?.order })
+                SearchRepoPagingSource({ _currentQuery.value }, { _repoSort.value?.sort }, { _repoSort.value?.order })
             }
         ).flow.cachedIn(viewModelScope)
     }
@@ -57,7 +64,7 @@ class SearchViewModel : ViewModel() {
                 initialLoadSize = 20
             ),
             pagingSourceFactory = {
-                SearchUserPagingSource({ _currentQuery.value!! }, { _userSort.value?.sort }, { _repoSort.value?.order })
+                SearchUserPagingSource({ _currentQuery.value }, { _userSort.value?.sort }, { _repoSort.value?.order })
             }
         ).flow.cachedIn(viewModelScope)
     }

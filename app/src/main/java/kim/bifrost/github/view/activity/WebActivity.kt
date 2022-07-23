@@ -8,9 +8,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.webkit.*
+import kim.bifrost.annotations.AutoWired
 import kim.bifrost.github.databinding.ActivityWebBinding
 import kim.bifrost.github.utils.renderMarkdown
-import kim.bifrost.lib_common.base.ui.AutoWired
 import kim.bifrost.lib_common.base.ui.BaseBindActivity
 import kim.bifrost.lib_common.extensions.TAG
 import kim.bifrost.lib_common.extensions.argument
@@ -30,17 +30,18 @@ class WebActivity : BaseBindActivity<ActivityWebBinding>(isCancelStatusBar = fal
     private lateinit var title: String
 
     @AutoWired
-    private var url: String? = null
+    var url: String? = null
 
     @AutoWired
-    private var mdSource: String? = null
+    var mdSource: String? = null
 
     @AutoWired
-    private lateinit var type: Type
+    lateinit var type: Type
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        inject()
         setSupportActionBar(binding.toolbar)
         supportActionBar?.let {
             it.title = title

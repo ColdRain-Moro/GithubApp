@@ -37,6 +37,7 @@ class EventsFragment : BaseVmBindFragment<EventsViewModel, FragmentRvBinding>() 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        inject()
         val eventsAdapter = EventsPagingAdapter { event ->
             viewModel.getRepoFlow(event.repo.name).collectLaunch {
                 RepositoryActivity.start(requireContext(), it)

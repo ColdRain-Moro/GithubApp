@@ -15,6 +15,6 @@ import kim.bifrost.lib_common.base.ui.BaseBindFragment
 class SplashFragment : BaseBindFragment<FragmentSplashBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        inject()
     }
 }

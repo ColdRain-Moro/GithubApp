@@ -9,6 +9,7 @@ import kim.bifrost.build_logic.plugin.base.BaseModulePlugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.plugins
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 
 /**
@@ -23,6 +24,7 @@ class AppModulePlugin : BaseModulePlugin() {
         apply(plugin = "com.android.application")
         apply(plugin = "kotlin-android")
         apply(plugin = "kotlin-kapt")
+        apply(plugin = "com.google.devtools.ksp")
     }
 
     override fun Project.applyPlugin() {
@@ -32,6 +34,13 @@ class AppModulePlugin : BaseModulePlugin() {
                 versionCode = Config.versionCode
                 versionName = Config.versionName
                 targetSdk = Config.targetSdk
+            }
+            sourceSets {
+                getByName("main") {
+                    java {
+                        srcDirs("build/generated/ksp/debug/kotlin")
+                    }
+                }
             }
         }
         dependAndroidBase()

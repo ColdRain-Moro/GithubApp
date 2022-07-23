@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>(isCancelStatusBar = false) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        inject()
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)

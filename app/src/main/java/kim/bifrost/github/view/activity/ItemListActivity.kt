@@ -12,10 +12,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import kim.bifrost.annotations.AutoWired
 import kim.bifrost.github.databinding.ActivityListBinding
 import kim.bifrost.github.view.adapter.*
 import kim.bifrost.github.view.viewmodel.ListViewModel
-import kim.bifrost.lib_common.base.ui.AutoWired
+import kim.bifrost.inject.injectAll
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindActivity
 import kim.bifrost.lib_common.extensions.argument
 import kim.bifrost.lib_common.extensions.asString
@@ -32,16 +33,17 @@ import kotlinx.coroutines.delay
 class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(isCancelStatusBar = false) {
 
     @AutoWired
-    private lateinit var type: Type
+    lateinit var type: Type
 
     @AutoWired
-    private lateinit var user: String
+    lateinit var user: String
 
     @AutoWired
-    private var repo: String? = null
+    var repo: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        injectAll()
         binding.apply {
             setSupportActionBar(toolbar)
             supportActionBar?.let {

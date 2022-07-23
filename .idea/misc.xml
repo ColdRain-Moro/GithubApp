@@ -52,6 +52,7 @@
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/fragment_repo_info.xml" value="0.165" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/fragment_repositories.xml" value="0.18920765027322403" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/fragment_rv.xml" value="0.159375" />
+        <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/fragment_search_result.xml" value="0.2767210144927536" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/fragment_splash.xml" value="0.2509057971014493" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/fragment_user_info.xml" value="0.25" />
         <entry key="..\:/project/android/GithubApp/app/src/main/res/layout/item_branch.xml" value="0.2767210144927536" />
@@ -73,7 +74,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

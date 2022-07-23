@@ -47,6 +47,7 @@ class RepoViewModel : ViewModel() {
                     BookmarksEntity(
                         repoId = local.id,
                         type = "repo",
+                        time = Date()
                     )
                 )
                 "Successfully added into your bookmarks".toastOnUIThread()

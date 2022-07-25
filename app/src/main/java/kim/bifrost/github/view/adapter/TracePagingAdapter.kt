@@ -24,8 +24,8 @@ import java.util.*
  * @since 2022/7/21 20:55
  */
 class TracePagingAdapter(
-    private val onUserClick: (LocalUserEntity) -> Unit,
-    private val onRepoClick: (LocalRepoEntity) -> Unit,
+    private val onUserClick: ItemUserBinding.(LocalUserEntity) -> Unit,
+    private val onRepoClick: ViewBinding.(LocalRepoEntity) -> Unit,
 ) : BasePagingAdapter<ViewBinding, TraceItem>() {
     override fun getDataBinding(parent: ViewGroup, viewType: Int): ViewBinding {
         return when (viewType) {
@@ -40,8 +40,8 @@ class TracePagingAdapter(
         get() = {
             binding.root.setOnClickListener {
                 when (val item = getItem(bindingAdapterPosition)) {
-                    is TraceItem.User -> onUserClick(item.user)
-                    is TraceItem.Repo -> onRepoClick(item.repo)
+                    is TraceItem.User -> (binding as ItemUserBinding).onUserClick(item.user)
+                    is TraceItem.Repo -> binding.onRepoClick(item.repo)
                     else -> {}
                 }
             }

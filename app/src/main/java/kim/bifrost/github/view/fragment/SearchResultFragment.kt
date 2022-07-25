@@ -1,7 +1,5 @@
 package kim.bifrost.github.view.fragment
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
@@ -10,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kim.bifrost.annotations.AutoWired
 import kim.bifrost.github.databinding.FragmentSearchResultBinding
 import kim.bifrost.github.view.activity.ProfileActivity
+import kim.bifrost.github.view.activity.RepositoryActivity
 import kim.bifrost.github.view.adapter.RepositoriesPagingAdapter
 import kim.bifrost.github.view.adapter.UserListPagingAdapter
 import kim.bifrost.github.view.viewmodel.SearchViewModel
@@ -36,8 +35,8 @@ class SearchResultFragment : BaseBindFragment<FragmentSearchResultBinding>() {
         binding.rv.layoutManager = LinearLayoutManager(requireContext())
         when (type) {
             Type.USER -> {
-                val adapter = UserListPagingAdapter(requireContext()) {
-                    ProfileActivity.start(requireContext(), it.login)
+                val adapter = UserListPagingAdapter {
+                    ProfileActivity.startWithAnimation(requireActivity(), it.login, ivAvatar, it.avatarUrl)
                 }
                 adapter.addLoadStateListener { state ->
                     when (state.refresh) {
@@ -61,7 +60,9 @@ class SearchResultFragment : BaseBindFragment<FragmentSearchResultBinding>() {
                 binding.rv.adapter = adapter
             }
             Type.REPO -> {
-                val adapter = RepositoriesPagingAdapter()
+                val adapter = RepositoriesPagingAdapter(requireActivity()) {
+                    RepositoryActivity.startWithAnimation(requireActivity(), it)
+                }
                 adapter.addLoadStateListener { state ->
                     when (state.refresh) {
                         is LoadState.Loading -> binding.srl.isRefreshing = true

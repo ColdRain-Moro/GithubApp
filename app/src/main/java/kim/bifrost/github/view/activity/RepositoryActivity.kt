@@ -1,12 +1,17 @@
 package kim.bifrost.github.view.activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
+import android.app.SharedElementCallback
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.transition.Slide
+import android.transition.Visibility
+import android.view.*
+import android.view.animation.BounceInterpolator
+import android.view.animation.OvershootInterpolator
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +32,7 @@ import kim.bifrost.lib_common.base.adapter.BaseVPAdapter
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindActivity
 import kim.bifrost.lib_common.extensions.argument
 import kim.bifrost.lib_common.extensions.drawable
+import kim.bifrost.lib_common.extensions.makeSceneTransitionAnimation
 import kim.bifrost.lib_common.extensions.toast
 
 /**
@@ -41,12 +47,30 @@ class RepositoryActivity : BaseVmBindActivity<RepoViewModel, ActivityRepoBinding
     @AutoWired
     lateinit var repo: Repository
 
+    @AutoWired
+    var transitionName: String? = null
+
     private lateinit var menu: Menu
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         inject()
+//         动画相关
+//        transitionName?.let {
+//            binding.root.transitionName = it
+//        }
+//        postponeEnterTransition()
+//        val decorView = window.decorView
+//        window.decorView.viewTreeObserver.addOnPreDrawListener(object :
+//            ViewTreeObserver.OnPreDrawListener {
+//            override fun onPreDraw(): Boolean {
+//                decorView.viewTreeObserver.removeOnPreDrawListener(this)
+//                supportStartPostponedEnterTransition()
+//                return true
+//            }
+//        })
+        window.enterTransition = buildEnterTransition()
         viewModel.repo = repo
         viewModel.addToTrace()
         binding.apply {
@@ -111,7 +135,7 @@ class RepositoryActivity : BaseVmBindActivity<RepoViewModel, ActivityRepoBinding
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                finish()
+                finishAfterTransition()
             }
             R.id.action_star -> {
                 if (viewModel.starred.value != null) {
@@ -153,11 +177,30 @@ class RepositoryActivity : BaseVmBindActivity<RepoViewModel, ActivityRepoBinding
         }
     }
 
+    private fun buildEnterTransition(): Visibility {
+        val slide = Slide()
+        slide.duration = 500
+        slide.slideEdge = Gravity.BOTTOM
+        slide.interpolator = OvershootInterpolator(0.5F)
+        return slide
+    }
+
     companion object {
         fun start(context: Context, repo: Repository) {
             val starter = Intent(context, RepositoryActivity::class.java)
                 .argument("repo", repo)
             context.startActivity(starter)
+        }
+
+        fun startWithAnimation(activity: Activity, repo: Repository) {
+            val starter = Intent(activity, RepositoryActivity::class.java)
+                .argument("repo", repo)
+//                .argument("transitionName", sharedElement.transitionName)
+            activity.startActivity(starter, activity.makeSceneTransitionAnimation(
+//                sharedElement to sharedElement.transitionName,
+//                activity.window.decorView.findViewById<View>(android.R.id.statusBarBackground) to Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME,
+//                activity.findViewById<View>(android.R.id.navigationBarBackground) to Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME
+            ))
         }
     }
 }

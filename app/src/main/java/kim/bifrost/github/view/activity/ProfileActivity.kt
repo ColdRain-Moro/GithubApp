@@ -1,6 +1,7 @@
 package kim.bifrost.github.view.activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -9,8 +10,13 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
+import androidx.core.app.ActivityOptionsCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.transition.platform.MaterialContainerTransform
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import kim.bifrost.annotations.AutoWired
 import kim.bifrost.github.R
 import kim.bifrost.github.databinding.ActivityProfileBinding
 import kim.bifrost.github.user.UserManager
@@ -30,10 +36,22 @@ import kim.bifrost.lib_common.utils.asEnglishString
  * @since 2022/7/15 19:00
  */
 class ProfileActivity : BaseVmBindActivity<ProfileViewModel, ActivityProfileBinding>(isCancelStatusBar = true) {
+
+    @AutoWired
+    var avatarUrl: String? = null
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         inject()
+        if (avatarUrl != null) {
+            Glide.with(this)
+                .load(avatarUrl)
+                .into(binding.sivAvatar)
+            Glide.with(this)
+                .load(avatarUrl)
+                .into(binding.ivBackground)
+        }
         viewModel.userName = intent.getStringExtra("user")!!
         viewModel.getUser()
         binding.apply {
@@ -89,7 +107,7 @@ class ProfileActivity : BaseVmBindActivity<ProfileViewModel, ActivityProfileBind
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                finish()
+                finishAfterTransition()
             }
             R.id.action_bookmark -> {
                 viewModel.addToBookmark()
@@ -103,6 +121,13 @@ class ProfileActivity : BaseVmBindActivity<ProfileViewModel, ActivityProfileBind
             val starter = Intent(context, ProfileActivity::class.java)
                 .putExtra("user", user)
             context.startActivity(starter)
+        }
+
+        fun startWithAnimation(activity: Activity, user: String, view: View, avatarUrl: String) {
+            val starter = Intent(activity, ProfileActivity::class.java)
+                .putExtra("user", user)
+                .putExtra("avatarUrl", avatarUrl)
+            activity.startActivity(starter, ActivityOptionsCompat.makeSceneTransitionAnimation(activity, view, "profile").toBundle())
         }
     }
 }

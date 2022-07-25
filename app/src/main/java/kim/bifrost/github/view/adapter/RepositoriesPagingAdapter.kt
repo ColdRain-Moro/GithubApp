@@ -1,5 +1,6 @@
 package kim.bifrost.github.view.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import kim.bifrost.github.databinding.ItemRepoBinding
 import kim.bifrost.github.repository.network.model.Repository
+import kim.bifrost.github.view.activity.ProfileActivity
 import kim.bifrost.github.view.activity.RepositoryActivity
 import kim.bifrost.lib_common.base.adapter.BasePagingAdapter
 import kim.bifrost.lib_common.extensions.gone
@@ -19,7 +21,7 @@ import kim.bifrost.lib_common.extensions.visible
  * @author 寒雨
  * @since 2022/7/16 18:36
  */
-class RepositoriesPagingAdapter : BasePagingAdapter<ItemRepoBinding, Repository>() {
+class RepositoriesPagingAdapter(private val activity: Activity, private val onClick: (Repository) -> Unit) : BasePagingAdapter<ItemRepoBinding, Repository>() {
     override fun getDataBinding(parent: ViewGroup, viewType: Int): ItemRepoBinding {
         return ItemRepoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     }
@@ -28,7 +30,11 @@ class RepositoriesPagingAdapter : BasePagingAdapter<ItemRepoBinding, Repository>
         get() = {
             binding.root.setOnClickListener {
                 val data = getItem(bindingAdapterPosition)!!
-                RepositoryActivity.start(itemView.context, data)
+                onClick(data)
+            }
+            binding.ivAvatar.setOnClickListener {
+                val data = getItem(bindingAdapterPosition)!!
+                ProfileActivity.startWithAnimation(activity, data.owner.login, it, data.owner.avatarUrl)
             }
         }
 

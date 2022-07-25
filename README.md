@@ -17,10 +17,10 @@
 使用ksp实现了简单的依赖注入，只需使用`@AutoWired`注解即可
 
 ~~~kotlin
-	@AutoWired
-    lateinit var type: Type
-    @AutoWired
-    var repository: Repository? = null
+@AutoWired
+lateinit var type: Type
+@AutoWired
+var repository: Repository? = null
 ~~~
 
 最开始采用反射实现，后来考虑到性能问题就换成了ksp。实际上是因为懒得一个个删的原因。
@@ -122,3 +122,15 @@ fun pagingSource(): PagingSource<Int, BookmarksQueryResult>
 ~~~
 
 甚至也支持联表查询:)
+
+### 开发过程中遇到的问题
+
+#### KSP Multiple round processing & Incremental processing
+
+ksp采用多轮处理的方式进行code processing，说实话我没弄明白这个所谓的多轮处理要怎么适配，于是就加了一个判断，让它始终只会进行一次有效的code processing。
+
+但是又因为ksp增量处理的特性，ksp在第二次执行时会从没有解析过的文件开始解析，导致生成的代码不完整，导致了每次都需要`gradle clean`再进行全量编译
+
+最后关闭了增量编译勉强解决
+
+> ksp.incremental=false

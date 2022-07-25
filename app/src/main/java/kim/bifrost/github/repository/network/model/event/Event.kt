@@ -63,7 +63,7 @@ enum class PullRequestReviewCommentEventActionType {
 }
 
 enum class PullRequestReviewEventActionType {
-    submitted, edited, dismissed
+    submitted, edited, dismissed, created
 }
 
 enum class RefType {
@@ -223,7 +223,7 @@ fun ItemEventBinding.handleEvent(event: Event, context: Context) {
         EventType.PullRequestReviewCommentEvent -> {
             val pullRequestCommentStr: String = getPullRequestReviewCommentEventStr(event.payload.action)
             actionStr = String.format(pullRequestCommentStr, event.repo.name)
-            descSpan = SpannableStringBuilder(event.payload.comment.bodyHtml)
+            descSpan = (event.payload.comment.bodyHtml ?: "").let { SpannableStringBuilder(it) }
         }
         EventType.PushEvent -> {
             val branch: String = event.payload.getBranch()

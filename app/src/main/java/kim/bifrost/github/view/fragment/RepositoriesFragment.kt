@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import kim.bifrost.github.databinding.FragmentRvBinding
+import kim.bifrost.github.view.activity.RepositoryActivity
 import kim.bifrost.github.view.adapter.RepositoriesPagingAdapter
 import kim.bifrost.github.view.viewmodel.RepositoriesViewModel
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindFragment
@@ -32,7 +33,9 @@ class RepositoriesFragment : BaseVmBindFragment<RepositoriesViewModel, FragmentR
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         inject()
         viewModel.userRepoData.collectLaunch {
-            val adapter = RepositoriesPagingAdapter()
+            val adapter = RepositoriesPagingAdapter(requireActivity()) {
+                RepositoryActivity.startWithAnimation(requireActivity(), it)
+            }
             binding.apply {
                 rvEvents.apply {
                     layoutManager = LinearLayoutManager(requireContext())

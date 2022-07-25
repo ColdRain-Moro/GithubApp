@@ -64,12 +64,13 @@ class SearchActivity : BaseVmBindActivity<SearchViewModel, ActivitySearchBinding
 
             override fun onPageSelected(position: Int) {
                 if (::menu.isInitialized) {
+                    val subMenu = menu.findItem(R.id.action_sort).subMenu
                     if (position == 0) {
-                        menu.setGroupVisible(R.id.group_repo, true)
-                        menu.setGroupVisible(R.id.group_user, false)
+                        subMenu.setGroupVisible(R.id.group_repo, true)
+                        subMenu.setGroupVisible(R.id.group_user, false)
                     } else {
-                        menu.setGroupVisible(R.id.group_user, true)
-                        menu.setGroupVisible(R.id.group_repo, false)
+                        subMenu.setGroupVisible(R.id.group_user, true)
+                        subMenu.setGroupVisible(R.id.group_repo, false)
                     }
                 }
                 if (firstTime) {

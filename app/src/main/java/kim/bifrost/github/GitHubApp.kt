@@ -18,15 +18,16 @@ class GitHubApp : BaseApp() {
     override fun onCreate() {
         super.onCreate()
         // 全局抓取异常
-        Handler(mainLooper).post {
-            while (true) {
-                try {
-                    Looper.loop()
-                } catch (e: Exception) {
-                    e.asString().toast()
-                    e.printStackTrace()
-                }
-            }
-        }
+        // debug的时候还是注释掉吧
+//        Handler(mainLooper).post {
+//            while (true) {
+//                try {
+//                    Looper.loop()
+//                } catch (e: Exception) {
+//                    e.asString().toast()
+//                    e.printStackTrace()
+//                }
+//            }
+//        }
     }
 }

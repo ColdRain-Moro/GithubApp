@@ -1,7 +1,5 @@
 package kim.bifrost.github.view.adapter
 
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
@@ -10,7 +8,6 @@ import kim.bifrost.github.repository.network.model.event.Event
 import kim.bifrost.github.repository.network.model.event.handleEvent
 import kim.bifrost.lib_common.base.adapter.BaseItemCallback
 import kim.bifrost.lib_common.base.adapter.BasePagingAdapter
-import kim.bifrost.lib_common.extensions.TAG
 import kim.bifrost.lib_common.utils.getNewsTimeStr
 
 /**
@@ -20,9 +17,11 @@ import kim.bifrost.lib_common.utils.getNewsTimeStr
  * @author 寒雨
  * @since 2022/7/15 12:13
  */
-class EventsPagingAdapter(private val onClick: (Event) -> Unit) : BasePagingAdapter<ItemEventBinding, Event>(
+class EventsPagingAdapter(
+    private val onClickBody: ItemEventBinding.(Event) -> Unit,
+    private val onClickAvatar: ItemEventBinding.(Event) -> Unit
+) : BasePagingAdapter<ItemEventBinding, Event>(
     BaseItemCallback { item1, item2 ->
-        Log.d(TAG, ": ${item1.id} ${item2.id}")
         item1.id == item2.id
     }
 ) {
@@ -35,28 +34,17 @@ class EventsPagingAdapter(private val onClick: (Event) -> Unit) : BasePagingAdap
             binding.apply {
                 binding.root.setOnClickListener {
                     val data = getItem(bindingAdapterPosition)!!
-                    onClick(data)
+                    binding.onClickBody(data)
+                }
+                binding.ivAvatar.setOnClickListener {
+                    val data = getItem(bindingAdapterPosition)!!
+                    onClickAvatar(data)
                 }
             }
         }
 
-    override fun onBindViewHolder(
-        holder: Holder<ItemEventBinding>,
-        position: Int,
-        payloads: MutableList<Any>
-    ) {
-        if (payloads.isEmpty()) {
-            super.onBindViewHolder(holder, position, payloads)
-        } else {
-            payloads.forEach {
-                Log.d(TAG, "onBindViewHolder: it = $it")
-            }
-        }
-    }
-
     override fun onBindViewHolder(holder: Holder<ItemEventBinding>, position: Int) {
         val data = getItem(position)!!
-        Log.d(TAG, "onBindViewHolder: $position")
         holder.binding.apply {
             Glide.with(ivAvatar)
                 .load(data.actor.avatarUrl)

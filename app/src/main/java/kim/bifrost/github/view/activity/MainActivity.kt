@@ -10,6 +10,8 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import kim.bifrost.github.R
 import kim.bifrost.github.databinding.ActivityMainBinding
 import kim.bifrost.github.user.UserManager
@@ -23,6 +25,9 @@ import kim.bifrost.lib_common.utils.asString
 import kotlinx.coroutines.launch
 
 class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>(isCancelStatusBar = false) {
+
+    private lateinit var avatar: ShapeableImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         inject()
@@ -47,7 +52,7 @@ class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>(isCa
                     R.id.nav_profile -> {
                         // 防止数据倒灌
                         if (viewModel.user.value != null) {
-                            ProfileActivity.start(this@MainActivity, viewModel.user.value!!.login)
+                            ProfileActivity.startWithAnimation(this@MainActivity, viewModel.user.value!!.login, avatar, viewModel.user.value!!.avatarUrl)
                         }
                     }
                     R.id.nav_owned -> {
@@ -115,7 +120,7 @@ class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>(isCa
                 true
             }
             getHeaderView(0).apply {
-                val avatar = findViewById<ShapeableImageView>(R.id.iv_avatar)
+                avatar = findViewById(R.id.iv_avatar)
                 val name = findViewById<TextView>(R.id.tv_name)
                 val desc = findViewById<TextView>(R.id.tv_desc)
                 viewModel.user.collectLaunch { user ->

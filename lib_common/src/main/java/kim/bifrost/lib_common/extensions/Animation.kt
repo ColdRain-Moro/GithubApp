@@ -1,6 +1,10 @@
 package kim.bifrost.lib_common.extensions
 
+import android.app.Activity
+import android.os.Bundle
+import android.view.View
 import android.view.animation.Animation
+import androidx.core.app.ActivityOptionsCompat
 
 /**
  * kim.bifrost.lib_common.extensions.Animation
@@ -21,4 +25,10 @@ fun Animation.setOnEnd(func: () -> Unit) {
             }
         }
     )
+}
+
+fun Activity.makeSceneTransitionAnimation(
+    vararg args: Pair<View, String>
+): Bundle? {
+    return ActivityOptionsCompat.makeSceneTransitionAnimation(this, *args.map { androidx.core.util.Pair.create(it.first, it.second) }.toTypedArray()).toBundle()
 }

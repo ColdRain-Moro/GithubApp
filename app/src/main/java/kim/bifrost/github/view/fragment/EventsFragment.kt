@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import kim.bifrost.github.databinding.FragmentRvBinding
+import kim.bifrost.github.view.activity.ProfileActivity
 import kim.bifrost.github.view.activity.RepositoryActivity
 import kim.bifrost.github.view.adapter.EventsPagingAdapter
 import kim.bifrost.github.view.viewmodel.EventsViewModel
@@ -38,11 +39,13 @@ class EventsFragment : BaseVmBindFragment<EventsViewModel, FragmentRvBinding>() 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         inject()
-        val eventsAdapter = EventsPagingAdapter { event ->
+        val eventsAdapter = EventsPagingAdapter(onClickBody = { event ->
             viewModel.getRepoFlow(event.repo.name).collectLaunch {
-                RepositoryActivity.start(requireContext(), it)
+                RepositoryActivity.startWithAnimation(requireActivity(), it)
             }
-        }
+        }, onClickAvatar = {
+            ProfileActivity.startWithAnimation(requireActivity(), it.actor.login, ivAvatar, it.actor.avatarUrl)
+        })
         binding.rvEvents.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = eventsAdapter

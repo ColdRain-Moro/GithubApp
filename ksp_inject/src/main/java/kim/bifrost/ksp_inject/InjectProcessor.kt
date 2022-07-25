@@ -6,6 +6,7 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.validate
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -26,8 +27,10 @@ class InjectProcessor(
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         if (executed) {
+            environment.logger.info("executed")
             return emptyList()
         }
+        environment.logger.info("execute!")
         this.resolver = resolver
         val fileSpecBuilder = FileSpec.builder(
             packageName = "kim.bifrost.inject",
@@ -43,9 +46,9 @@ class InjectProcessor(
             .receiver(ClassName.bestGuess("androidx.fragment.app.Fragment"))
             .returns(Unit::class.java)
             .addStatement("when (this) {")
-        resolver.getAllFiles()
+        resolver.getNewFiles()
             .flatMap { it.declarations }
-            .filterIsInstance<KSClassDeclaration>()
+            .filter { it is KSClassDeclaration }
             // 类型解析的代价很高，最好能有有效的方法过滤
             .filter { it.qualifiedName?.asString()?.endsWith("Activity") == true || it.qualifiedName?.asString()?.endsWith("Fragment") == true }
             .toList()

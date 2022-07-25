@@ -3,7 +3,12 @@ package kim.bifrost.github.view.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.transition.Slide
+import android.transition.Visibility
+import android.view.Gravity
 import android.view.MenuItem
+import android.view.Window
+import android.view.animation.OvershootInterpolator
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.paging.LoadState
@@ -12,16 +17,20 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import com.google.android.material.transition.platform.MaterialElevationScale
+import com.google.android.material.transition.platform.MaterialFadeThrough
+import com.google.android.material.transition.platform.MaterialSharedAxis
 import kim.bifrost.annotations.AutoWired
+import kim.bifrost.github.R
 import kim.bifrost.github.databinding.ActivityListBinding
+import kim.bifrost.github.databinding.ItemUserBinding
 import kim.bifrost.github.view.adapter.*
 import kim.bifrost.github.view.viewmodel.ListViewModel
-import kim.bifrost.inject.injectAll
 import kim.bifrost.lib_common.base.ui.mvvm.BaseVmBindActivity
 import kim.bifrost.lib_common.extensions.argument
 import kim.bifrost.lib_common.extensions.asString
 import kim.bifrost.lib_common.extensions.toast
-import kotlinx.coroutines.delay
 
 /**
  * kim.bifrost.github.view.activity.PeopleListActivity
@@ -43,7 +52,8 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        injectAll()
+        inject()
+        window.exitTransition = buildExitTransition()
         binding.apply {
             setSupportActionBar(toolbar)
             supportActionBar?.let {
@@ -76,8 +86,8 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
             }
             when (type) {
                 Type.USER_FOLLOWING, Type.USER_FOLLOWERS, Type.REPO_STARGAZERS, Type.REPO_WATCHERS -> {
-                    val adapter = UserListPagingAdapter(this@ItemListActivity) { user ->
-                        ProfileActivity.start(this@ItemListActivity, user.login)
+                    val adapter = UserListPagingAdapter { user ->
+                        ProfileActivity.startWithAnimation(this@ItemListActivity, user.login, ivAvatar, user.avatarUrl)
                     }
                     rv.adapter = adapter
                     initAdapter()
@@ -86,7 +96,9 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
                     }
                 }
                 Type.USER_REPOSITORIES, Type.REPO_FORKS -> {
-                    val adapter = RepositoriesPagingAdapter()
+                    val adapter = RepositoriesPagingAdapter(this@ItemListActivity) {
+                        RepositoryActivity.startWithAnimation(this@ItemListActivity, it)
+                    }
                     rv.adapter = adapter
                     initAdapter()
                     viewModel.repoPagingSource.collectLaunch {
@@ -98,10 +110,10 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
                         if (e.entity.type == "repo") {
                             viewModel.getRepoFlow(e.repo!!.owner, e.repo.name)
                                 .collectLaunch { repo ->
-                                    RepositoryActivity.start(this@ItemListActivity, repo)
+                                    RepositoryActivity.startWithAnimation(this@ItemListActivity, repo)
                                 }
                         } else {
-                            ProfileActivity.start(this@ItemListActivity, e.user!!.name)
+                            ProfileActivity.startWithAnimation(this@ItemListActivity, e.user!!.name, (this as ItemUserBinding).ivAvatar, e.user.avatarUrl)
                         }
                     }
                     rv.adapter = adapter
@@ -116,11 +128,11 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
                         onRepoClick = {
                             viewModel.getRepoFlow(it.owner, it.name)
                                 .collectLaunch { repo ->
-                                    RepositoryActivity.start(this@ItemListActivity, repo)
+                                    RepositoryActivity.startWithAnimation(this@ItemListActivity, repo)
                                 }
                         },
                         onUserClick = {
-                            ProfileActivity.start(this@ItemListActivity, it.name)
+                            ProfileActivity.startWithAnimation(this@ItemListActivity, it.name, ivAvatar, it.avatarUrl)
                         }
                     )
                     rv.adapter = adapter
@@ -230,6 +242,14 @@ class ItemListActivity : BaseVmBindActivity<ListViewModel, ActivityListBinding>(
         }
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(binding.rv)
+    }
+
+    private fun buildExitTransition(): Visibility {
+        val slide = Slide()
+        slide.duration = 500
+        slide.slideEdge = Gravity.START
+        slide.interpolator = OvershootInterpolator(0.5f)
+        return slide
     }
 
     enum class Type {

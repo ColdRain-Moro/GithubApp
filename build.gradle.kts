@@ -10,3 +10,21 @@ plugins {
 tasks.register<Delete>("clean") {
     delete(rootProject.buildDir)
 }
+
+//gradle.startParameter.taskNames
+//    .find { it.contains(":app:assembleDebug") }
+//    ?.apply {
+//        tasks.whenTaskAdded {
+//            if (name == "clean") {
+//                dependsOn(this@apply)
+//            }
+//        }
+////        subprojects.find { it.name.contains("ksp_inject") }
+////            ?.tasks
+////            ?.whenTaskAdded {
+////                if (name.contains("clean")) {
+////                    dependsOn(this@apply)
+////                }
+////            }
+//    }
+

@@ -90,7 +90,7 @@ data class IssueEvent(
     val updatedAt: Date,
     val body: String,
     @SerializedName("body_html")
-    val bodyHtml: String,
+    val bodyHtml: String?,
     @SerializedName("event")
     val type: Type,
     @SerializedName("html_url")

@@ -20,7 +20,7 @@ import kim.bifrost.lib_common.extensions.visible
  * @author 寒雨
  * @since 2022/7/21 10:41
  */
-class BookmarksPagingAdapter(private val onClick: (data: BookmarksQueryResult) -> Unit) : BasePagingAdapter<ViewBinding, BookmarksQueryResult>() {
+class BookmarksPagingAdapter(private val onClick: ViewBinding.(data: BookmarksQueryResult) -> Unit) : BasePagingAdapter<ViewBinding, BookmarksQueryResult>() {
     override fun getDataBinding(parent: ViewGroup, viewType: Int): ViewBinding {
         return when (viewType) {
             ITEM_REPO -> ItemRepoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -33,7 +33,7 @@ class BookmarksPagingAdapter(private val onClick: (data: BookmarksQueryResult) -
         get() = {
             binding.root.setOnClickListener {
                 val data = getItem(bindingAdapterPosition)!!
-                onClick(data)
+                binding.onClick(data)
             }
         }
 

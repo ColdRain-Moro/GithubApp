@@ -32,7 +32,6 @@ class IssuesActivity : BaseVmBindActivity<IssuesViewModel, ActivityIssuesBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         inject()
-        intent.getValue<String>("type")
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.let {

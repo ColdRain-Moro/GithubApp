@@ -14,7 +14,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="230dp"
             android:fitsSystemWindows="true"
             app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
             app:contentScrim="?colorPrimary"
@@ -48,13 +48,14 @@
             
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:padding="24dp"
-                android:layout_marginTop="42dp"
+                android:layout_marginTop="22dp"
                 android:layout_gravity="bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/siv_avatar"
+                    android:transitionName="profile"
                     android:layout_width="72dp"
                     android:layout_height="72dp"
                     android:src="@drawable/ic_github_logo"

@@ -27,7 +27,7 @@ import kim.bifrost.lib_common.extensions.visible
 class WebActivity : BaseBindActivity<ActivityWebBinding>(isCancelStatusBar = false) {
 
     @AutoWired
-    private lateinit var title: String
+    lateinit var title: String
 
     @AutoWired
     var url: String? = null

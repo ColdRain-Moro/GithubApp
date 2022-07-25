@@ -35,13 +35,33 @@ class AppModulePlugin : BaseModulePlugin() {
                 versionName = Config.versionName
                 targetSdk = Config.targetSdk
             }
-            sourceSets {
-                getByName("main") {
-                    java {
-                        srcDirs("build/generated/ksp/debug/kotlin")
+            buildTypes {
+                getByName("release") {
+                    sourceSets {
+                        getByName("main") {
+                            java {
+                                srcDirs("build/generated/ksp/release/kotlin")
+                            }
+                        }
+                    }
+                }
+                getByName("debug") {
+                    sourceSets {
+                        getByName("main") {
+                            java {
+                                srcDirs("build/generated/ksp/debug/kotlin")
+                            }
+                        }
                     }
                 }
             }
+//            sourceSets {
+//                getByName("main") {
+//                    java {
+//                        srcDirs("build/generated/ksp/debug/kotlin")
+//                    }
+//                }
+//            }
         }
         dependAndroidBase()
         extensions.configure<KaptExtension> {

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kim.bifrost.annotations.AutoWired
 import kim.bifrost.github.databinding.FragmentCommitBinding
 import kim.bifrost.github.repository.network.model.Repository
+import kim.bifrost.github.view.activity.ProfileActivity
 import kim.bifrost.github.view.adapter.CommitPagingAdapter
 import kim.bifrost.github.view.viewmodel.CommitViewModel
 import kim.bifrost.github.view.viewmodel.RepoViewModel
@@ -35,7 +36,9 @@ class CommitFragment : BaseVmBindFragment<CommitViewModel, FragmentCommitBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         inject()
-        val adapter = CommitPagingAdapter(requireContext())
+        val adapter = CommitPagingAdapter {
+            ProfileActivity.startWithAnimation(requireActivity(), it.author.login, this, it.author.avatarUrl)
+        }
         binding.rvCommit.apply {
             layoutManager = LinearLayoutManager(requireContext())
             this.adapter = adapter

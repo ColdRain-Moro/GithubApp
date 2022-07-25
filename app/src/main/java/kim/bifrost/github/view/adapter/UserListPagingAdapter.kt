@@ -1,6 +1,5 @@
 package kim.bifrost.github.view.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
@@ -15,7 +14,7 @@ import kim.bifrost.lib_common.base.adapter.BasePagingAdapter
  * @author 寒雨
  * @since 2022/7/17 14:55
  */
-class UserListPagingAdapter(context: Context, private val onClick: (data: User) -> Unit) : BasePagingAdapter<ItemUserBinding, User>() {
+class UserListPagingAdapter(private val onClick: ItemUserBinding.(data: User) -> Unit) : BasePagingAdapter<ItemUserBinding, User>() {
     override fun getDataBinding(parent: ViewGroup, viewType: Int): ItemUserBinding {
         return ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     }
@@ -24,7 +23,7 @@ class UserListPagingAdapter(context: Context, private val onClick: (data: User) 
         get() = {
             binding.root.setOnClickListener {
                 val data = getItem(bindingAdapterPosition)!!
-                onClick(data)
+                binding.onClick(data)
             }
         }
 

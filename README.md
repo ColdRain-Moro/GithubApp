@@ -123,9 +123,9 @@ fun pagingSource(): PagingSource<Int, BookmarksQueryResult>
 
 甚至也支持联表查询:)
 
-### 开发过程中遇到的问题
+## 开发过程中遇到的问题
 
-#### KSP Multiple round processing & Incremental processing
+### KSP Multiple round processing & Incremental processing
 
 ksp采用多轮处理的方式进行code processing，说实话我没弄明白这个所谓的多轮处理要怎么适配，于是就加了一个判断，让它始终只会进行一次有效的code processing。
 
@@ -134,3 +134,44 @@ ksp采用多轮处理的方式进行code processing，说实话我没弄明白�
 最后关闭了增量编译勉强解决
 
 > ksp.incremental=false
+
+### MaterialContainerTransform
+
+整不会了，还好有其他的转场动画
+
+### flowWithLifeCycle导致的数据倒灌
+
+由于郭神最先封装过一个拓展函数，里面直接使用了这个方法，导致了一个鬼畜的现象 -> 我进行请求数据，collect这个flow，在收到数据时跳转页面。而这个页面退出后数据进行了倒灌，于是我又进入了刚才退出的页面。
+
+~~~kotlin
+@OptIn(ExperimentalCoroutinesApi::class)
+public fun <T> Flow<T>.flowWithLifecycle(
+    lifecycle: Lifecycle,
+    minActiveState: Lifecycle.State = Lifecycle.State.STARTED
+): Flow<T> = callbackFlow {
+    lifecycle.repeatOnLifecycle(minActiveState) {
+        this@flowWithLifecycle.collect {
+            send(it)
+        }
+    }
+    close()
+}
+~~~
+
+看了源码之后发现这是`flowWithLifecycle`的特性，这个方法产生一个冷流，在生命周期发生改变时重新唤醒上游发送数据，进行一个数据的倒灌。
+
+## 我的图图呢？
+
+![飞书20220725-205643](https://persecution-1301196908.cos.ap-chongqing.myqcloud.com/image_bed/%E9%A3%9E%E4%B9%A620220725-205643.jpg)
+
+![飞书20220725-205649](https://persecution-1301196908.cos.ap-chongqing.myqcloud.com/image_bed/%E9%A3%9E%E4%B9%A620220725-205649.jpg)
+
+![飞书20220725-205652](https://persecution-1301196908.cos.ap-chongqing.myqcloud.com/image_bed/%E9%A3%9E%E4%B9%A620220725-205652.jpg)
+
+![飞书20220725-205655](https://persecution-1301196908.cos.ap-chongqing.myqcloud.com/image_bed/%E9%A3%9E%E4%B9%A620220725-205655.jpg)
+
+![飞书20220725-205700](https://persecution-1301196908.cos.ap-chongqing.myqcloud.com/image_bed/%E9%A3%9E%E4%B9%A620220725-205700.jpg)
+
+![飞书20220725-205703](https://persecution-1301196908.cos.ap-chongqing.myqcloud.com/image_bed/%E9%A3%9E%E4%B9%A620220725-205703.jpg)
+
+![飞书20220725-205708](https://persecution-1301196908.cos.ap-chongqing.myqcloud.com/image_bed/%E9%A3%9E%E4%B9%A620220725-205708.jpg)

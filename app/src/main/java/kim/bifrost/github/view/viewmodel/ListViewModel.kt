@@ -1,6 +1,7 @@
 package kim.bifrost.github.view.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import kim.bifrost.github.repository.database.AppDatabase
@@ -14,6 +15,7 @@ import kim.bifrost.lib_common.extensions.catchAll
 import kim.bifrost.lib_common.extensions.tryRun
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -103,14 +105,19 @@ class ListViewModel(
             month = 0
             year = 0
             it.insertSeparators { _, after ->
+                val calendar = after?.entity?.time?.let {
+                    Calendar.getInstance().apply {
+                        time = it
+                    }
+                }
                 if (after != null
-                    && (date != after.entity.time.date
-                        || month != after.entity.time.month
-                        || year != after.entity.time.year)
+                    && (date != calendar!!.get(Calendar.DATE)
+                        || month != calendar.get(Calendar.MONTH)
+                        || year != calendar.get(Calendar.YEAR))
                 ) {
-                    date = after.entity.time.date
-                    month = after.entity.time.month
-                    year = after.entity.time.year
+                    date = calendar.get(Calendar.DATE)
+                    month = calendar.get(Calendar.MONTH)
+                    year = calendar.get(Calendar.YEAR)
                     return@insertSeparators TraceItem.Divider(after.entity.time)
                 }
                 return@insertSeparators null

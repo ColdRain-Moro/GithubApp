@@ -1,9 +1,7 @@
 package kim.bifrost.github
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kim.bifrost.github.view.activity.CrashActivity
 import kim.bifrost.lib_common.BaseApp.Companion.appContext
-import kotlin.system.exitProcess
 
 /**
  * kim.bifrost.github.GitHubAppExceptionHandler

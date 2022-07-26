@@ -2,6 +2,10 @@
 
 > 红岩网校暑假考核
 
+## 注意事项
+
+> 使用`gradle :app:kspDebugKotlin`刷新ksp缓存	
+
 ## 亮点
 
 ### 功能较全
@@ -164,7 +168,101 @@ public fun <T> Flow<T>.flowWithLifecycle(
 }
 ~~~
 
-看了源码之后发现这是`flowWithLifecycle`的特性，这个方法产生一个冷流，在生命周期发生改变时重新唤醒上游发送数据，进行一个数据的倒灌。
+看了源码之后发现这是`flowWithLifecycle`的特性，这个方法产生一个冷流，在生命周期发生改变时重新**唤醒上游**，进行一个数据的倒灌。
+
+## ProcessPhoenix源码分析
+
+> 由于直接抄了ProcessPhoenix, 所以在这里做一下源码分析
+
+由于使用ProcessPhoenix首先需要在manifest里面声明一个activity
+
+~~~xml
+<activity android:name=".ProcessPhoenix"
+            android:process=":phoenix"
+            android:exported="true">
+</activity>
+~~~
+
+所以可以大致猜到，ProcessPhoenix的原理是在崩溃时启动一个Activity
+
+发现这个activity的声明比一般的activity的声明多了一句话
+
+> android:process=":phoenix"
+
+那先看看这个属性的注释
+
+> Specify a specific process that the associated code is to run in. Use with the application tag (to supply a default process for all application components), or with the activity, receiver, service, or provider tag (to supply a specific icon for that component). Application components are normally run in a single process that is created for the entire application. You can use this tag to modify where they run. If the process name begins with a ':' character, a new process private to that application will be created when needed to run that component (allowing you to spread your application across multiple processes). If the process name begins with a lower-case character, the component will be run in a global process of that name, provided that you have permission to do so, allowing multiple applications to share one process to reduce resource usage.
+>
+> 指定相关代码将在其中运行的特定进程。与应用程序标记（为所有应用程序组件提供默认进程）或活动、接收器、服务或提供程序标记（为其提供特定图标）一起使用零件）。应用程序组件通常在为整个应用程序创建的单个进程中运行。您可以使用此标签来修改它们的运行位置。**如果进程名称以 ':' 字符开头，则在需要运行该组件时将创建一个专用于该应用程序的新进程（允许您将应用程序分布在多个进程中）**。如果进程名称以小写字符开头，则组件将在该名称的全局进程中运行，前提是您有权这样做，从而允许多个应用程序共享一个进程以减少资源使用。
+
+读了这段注释便可以了解到，这个activity将会在一个新的进程中启动。这就好玩了，我还从来没有接触过多进程的app，以往接触的app都是只运行在一个进程上的。
+
+再看看`ProcessPhoenix.java`，这是一个Activity，先从启动它的方法开始分析
+
+~~~kotlin
+public static void triggerRebirth(Context context) {
+      triggerRebirth(context, getRestartIntent(context));
+}
+~~~
+
+跳转到它的同名重载
+
+~~~java
+public static void triggerRebirth(Context context, Intent... nextIntents) {
+        if (nextIntents.length < 1) {
+            throw new IllegalArgumentException("intents cannot be empty");
+        }
+        // create a new task for the first activity.
+        nextIntents[0].addFlags(FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
+
+        Intent intent = new Intent(context, ProcessPhoenix.class);
+        intent.addFlags(FLAG_ACTIVITY_NEW_TASK); // In case we are called with non-Activity context.
+        intent.putParcelableArrayListExtra(KEY_RESTART_INTENTS, new ArrayList<>(Arrays.asList(nextIntents)));
+        intent.putExtra(KEY_MAIN_PROCESS_PID, Process.myPid());
+        context.startActivity(intent);
+    }
+~~~
+
+这里可以发现，这里启动了这个activity，并且把当前进程的pid作为参数传了进去，当然还传进去了一堆intents，这个等会分析
+
+由于可能需要app作为context来启动activity，所以需要加上FLAG_ACTIVITY_NEW_TASK，同时再加上FLAG_ACTIVITY_CLEAR_TASK，把之前activity栈中的activity清空。
+
+再来看看`getRestartIntent`
+
+~~~java
+    private static Intent getRestartIntent(Context context) {
+        String packageName = context.getPackageName();
+        Intent defaultIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        if (defaultIntent != null) {
+            return defaultIntent;
+        }
+
+        throw new IllegalStateException("Unable to determine default activity for "
+            + packageName
+            + ". Does an activity specify the DEFAULT category in its intent filter?");
+    }
+~~~
+
+这个就好说了，首先获取当前程序包名，再从通过包名从包管理器里找到对应app的启动Intent并返回。
+
+所以上面作为参数传入的intent数组实际上是启动应用第一个activity的intent。
+
+然后我们看看最后的核心逻辑`onCreate`
+
+~~~java
+    @Override protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Process.killProcess(getIntent().getIntExtra(KEY_MAIN_PROCESS_PID, -1)); // Kill original main process
+
+        ArrayList<Intent> intents = getIntent().getParcelableArrayListExtra(KEY_RESTART_INTENTS);
+        startActivities(intents.toArray(new Intent[intents.size()]));
+        finish();
+        Runtime.getRuntime().exit(0); // Kill kill kill!
+    }
+~~~
+
+通过传入的上一个进程的pid杀死上一个进程，拿到传入的intent，再通过传入的intent启动一个新的activity——之前我们传入了一个app的启动intent，那么就意味着我们重启了这个应用（在另外一条进程上）。最后这条进程已经没用了，直接杀掉进程，结束。
 
 ## 我的图图呢？
 

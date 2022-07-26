@@ -1,6 +1,7 @@
 package kim.bifrost.github.view.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -50,5 +51,5 @@ class EventsViewModel(
             repo.languageColor = RepoService.getLanguageColor(repo.language).data?.hex
         }
         return@map repo
-    }
+    }.flowWithLifecycle()
 }

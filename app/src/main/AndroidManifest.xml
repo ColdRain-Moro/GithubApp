@@ -61,6 +61,13 @@
         <activity android:name=".view.activity.SearchActivity"
             android:exported="true">
         </activity>
+        <activity android:name=".ProcessPhoenix"
+            android:process=":phoenix"
+            android:exported="true">
+        </activity>
+        <activity android:name=".view.activity.CrashActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

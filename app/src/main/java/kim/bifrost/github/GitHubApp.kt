@@ -19,15 +19,17 @@ class GitHubApp : BaseApp() {
         super.onCreate()
         // 全局抓取异常
         // debug的时候还是注释掉吧
-//        Handler(mainLooper).post {
-//            while (true) {
-//                try {
-//                    Looper.loop()
-//                } catch (e: Exception) {
-//                    e.asString().toast()
-//                    e.printStackTrace()
-//                }
-//            }
-//        }
+        Handler(mainLooper).post {
+            // 最多抓取三次异常
+            repeat(3) {
+                try {
+                    Looper.loop()
+                } catch (e: Exception) {
+                    e.asString().toast()
+                    e.printStackTrace()
+                }
+            }
+        }
+        Thread.setDefaultUncaughtExceptionHandler(GitHubAppExceptionHandler())
     }
 }

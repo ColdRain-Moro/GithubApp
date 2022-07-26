@@ -74,7 +74,7 @@ abstract class BaseActivity(
         val decorView = window.decorView
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val windowInsetsController = ViewCompat.getWindowInsetsController(decorView)
-        windowInsetsController?.isAppearanceLightStatusBars = true
+        windowInsetsController?.isAppearanceLightStatusBars = false
         window.statusBarColor = Color.TRANSPARENT
     }
 

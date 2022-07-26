@@ -19,7 +19,7 @@ buildscript {
     }
 }
 
-apply(plugin = "pandora-plugin")
+//apply(plugin = "pandora-plugin")
 
 dependAndroidKtx()
 dependAndroidView()
@@ -39,6 +39,6 @@ dependencies {
     implementation("io.noties.markwon:core:4.6.2")
     implementation("io.noties.markwon:image-glide:4.6.2")
     implementation("io.noties.markwon:linkify:4.6.2")
-    implementation("com.github.whataa:pandora:androidx_v2.1.0")
+    debugImplementation("com.github.whataa:pandora:androidx_v2.1.0")
     ksp(project(":ksp_inject"))
 }

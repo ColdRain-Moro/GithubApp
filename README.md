@@ -123,6 +123,12 @@ fun pagingSource(): PagingSource<Int, BookmarksQueryResult>
 
 甚至也支持联表查询:)
 
+### ~~简单搓了个获取语言对应颜色的后端~~
+
+由于github的接口没有给颜色，于是我自己在github上找了数据上传到数据库，然后用ktor写了个简单的接口
+
+[ColdRain-Moro/gh-language-color-api: 提供获取github语言对应颜色的接口](https://github.com/ColdRain-Moro/gh-language-color-api)
+
 ## 开发过程中遇到的问题
 
 ### KSP Multiple round processing & Incremental processing

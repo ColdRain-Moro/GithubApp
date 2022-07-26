@@ -264,6 +264,14 @@ public static void triggerRebirth(Context context, Intent... nextIntents) {
 
 通过传入的上一个进程的pid杀死上一个进程，拿到传入的intent，再通过传入的intent启动一个新的activity——之前我们传入了一个app的启动intent，那么就意味着我们重启了这个应用（在另外一条进程上）。最后这条进程已经没用了，直接杀掉进程，结束。
 
+## 不足
+
+> 那可太多太多了
+
+- 不会自定义View
+- 写的界面难看
+- ...
+
 ## 我的图图呢？
 
 ![飞书20220725-205643](https://persecution-1301196908.cos.ap-chongqing.myqcloud.com/image_bed/%E9%A3%9E%E4%B9%A620220725-205643.jpg)

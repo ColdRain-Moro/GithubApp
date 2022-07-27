@@ -14,12 +14,12 @@ buildscript {
         mavenCentral()
         google()
     }
-//    dependencies {
-//        classpath("com.github.whataa:pandora-plugin:1.0.0")
-//    }
+    dependencies {
+        classpath("com.github.whataa:pandora-plugin:1.0.0")
+    }
 }
 
-//apply(plugin = "pandora-plugin")
+apply(plugin = "pandora-plugin")
 
 dependAndroidKtx()
 dependAndroidView()
@@ -39,6 +39,7 @@ dependencies {
     implementation("io.noties.markwon:core:4.6.2")
     implementation("io.noties.markwon:image-glide:4.6.2")
     implementation("io.noties.markwon:linkify:4.6.2")
-//    debugImplementation("com.github.whataa:pandora:androidx_v2.1.0")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
+    debugImplementation("com.github.whataa:pandora:androidx_v2.1.0")
     ksp(project(":ksp_inject"))
 }

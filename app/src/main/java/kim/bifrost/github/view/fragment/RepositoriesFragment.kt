@@ -32,27 +32,27 @@ class RepositoriesFragment : BaseVmBindFragment<RepositoriesViewModel, FragmentR
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         inject()
+        val adapter = RepositoriesPagingAdapter(requireActivity()) {
+            RepositoryActivity.startWithAnimation(requireActivity(), it)
+        }
+        binding.apply {
+            rvEvents.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                this.adapter = adapter
+            }
+            adapter.addLoadStateListener { state ->
+                when (state.refresh) {
+                    is LoadState.Loading -> binding.srlEvents.isRefreshing = true
+                    is LoadState.NotLoading -> binding.srlEvents.isRefreshing = false
+                    is LoadState.Error -> "数据加载错误: ${(state.refresh as LoadState.Error).error.message}".toast()
+                }
+            }
+            binding.srlEvents.setOnRefreshListener {
+                adapter.refresh()
+            }
+        }
         viewModel.userRepoData.collectLaunch {
-            val adapter = RepositoriesPagingAdapter(requireActivity()) {
-                RepositoryActivity.startWithAnimation(requireActivity(), it)
-            }
-            binding.apply {
-                rvEvents.apply {
-                    layoutManager = LinearLayoutManager(requireContext())
-                    this.adapter = adapter
-                }
-                adapter.addLoadStateListener { state ->
-                    when (state.refresh) {
-                        is LoadState.Loading -> binding.srlEvents.isRefreshing = true
-                        is LoadState.NotLoading -> binding.srlEvents.isRefreshing = false
-                        is LoadState.Error -> "数据加载错误: ${(state.refresh as LoadState.Error).error.message}".toast()
-                    }
-                }
-                binding.srlEvents.setOnRefreshListener {
-                    adapter.refresh()
-                }
-                adapter.submitData(it)
-            }
+            adapter.submitData(it)
         }
     }
 

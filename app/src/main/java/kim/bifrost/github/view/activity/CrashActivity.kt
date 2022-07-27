@@ -7,6 +7,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kim.bifrost.github.ProcessPhoenix
 import kim.bifrost.lib_common.BaseApp
 import kim.bifrost.lib_common.base.ui.BaseActivity
+import kim.bifrost.lib_common.extensions.asString
 import kotlin.system.exitProcess
 
 /**
@@ -19,20 +20,30 @@ import kotlin.system.exitProcess
 class CrashActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val throwable = intent.getSerializableExtra("exception") as Throwable
         MaterialAlertDialogBuilder(this)
             .setTitle("哦豁 App崩溃了!")
-            .setMessage("好似，开香槟🍾")
+            .setMessage("""好似，开香槟🍾
+                
+                ${throwable.asString()}
+                
+                ${throwable.stackTrace.joinToString("\n")}
+                
+            """.trimIndent())
             .setPositiveButton("重启应用") { _, _ ->
+                finish()
                 ProcessPhoenix.triggerRebirth(this)
             }
             .setNegativeButton("退出应用") { _, _ ->
+                finish()
                 exitProcess(0)
             }.show()
     }
 
     companion object {
-        fun start(context: Context) {
+        fun start(context: Context, e: Throwable) {
             val starter = Intent(context, CrashActivity::class.java)
+                .putExtra("exception", e)
             // 清空返回栈
             starter.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(starter)

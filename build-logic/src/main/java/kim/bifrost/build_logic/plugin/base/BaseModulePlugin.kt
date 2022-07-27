@@ -47,7 +47,8 @@ abstract class BaseModulePlugin : Plugin<Project> {
         }
         buildTypes {
             release {
-                isMinifyEnabled = true
+                // 他妈的，开了混淆就寄了
+                isMinifyEnabled = false
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro"

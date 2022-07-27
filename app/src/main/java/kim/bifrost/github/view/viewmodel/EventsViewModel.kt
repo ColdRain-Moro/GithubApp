@@ -51,5 +51,5 @@ class EventsViewModel(
             repo.languageColor = RepoService.getLanguageColor(repo.language).data?.hex
         }
         return@map repo
-    }.flowWithLifecycle()
+    }
 }

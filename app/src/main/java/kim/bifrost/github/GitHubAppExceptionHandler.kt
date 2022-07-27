@@ -13,6 +13,6 @@ import kim.bifrost.lib_common.BaseApp.Companion.appContext
 class GitHubAppExceptionHandler : Thread.UncaughtExceptionHandler {
     override fun uncaughtException(t: Thread, e: Throwable) {
         e.printStackTrace()
-        CrashActivity.start(appContext)
+        CrashActivity.start(appContext, e)
     }
 }

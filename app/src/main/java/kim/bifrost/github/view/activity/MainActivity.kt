@@ -36,12 +36,6 @@ class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>(isCa
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24)
         }
-        viewModel.tabLayoutBus.collectLaunch {
-            binding.tabLayout.it()
-        }
-        viewModel.toolbarBus.collectLaunch {
-            binding.toolbar.it()
-        }
         binding.navView.apply {
             setCheckedItem(R.id.nav_news)
             setNavigationItemSelectedListener {
@@ -57,9 +51,7 @@ class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>(isCa
                     }
                     R.id.nav_owned -> {
                         if (viewModel.user.value != null) {
-                            viewModel.dispatchToolbarChange {
-                                title = "Repositories"
-                            }
+                            supportActionBar?.title = "Repositories"
                             supportFragmentManager.commit {
                                 replace(
                                     R.id.fragment_container,
@@ -71,9 +63,7 @@ class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>(isCa
                     }
                     R.id.nav_starred -> {
                         if (viewModel.user.value != null) {
-                            viewModel.dispatchToolbarChange {
-                                title = "Starred Repositories"
-                            }
+                            supportActionBar?.title = "Starred Repositories"
                             // 由于是同种类型的fragment，所以不能使用郭神的replaceFragment
                             supportFragmentManager.commit {
                                 replace(
@@ -86,9 +76,7 @@ class MainActivity : BaseVmBindActivity<MainViewModel, ActivityMainBinding>(isCa
                     }
                     R.id.nav_news -> {
                         if (viewModel.user.value != null) {
-                            viewModel.dispatchToolbarChange {
-                                title = "News"
-                            }
+                            supportActionBar?.title = "News"
                             replaceFragment(R.id.fragment_container) {
                                 EventsFragment.newInstance(
                                     EventsFragment.SourceType.NEWS,

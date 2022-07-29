@@ -24,28 +24,11 @@ import kotlinx.coroutines.launch
  * @since 2022/7/14 21:20
  */
 class MainViewModel : ViewModel() {
-    private val _toolbarBus = MutableSharedFlow<Toolbar.() -> Unit>()
-    private val _tabLayoutBus = MutableSharedFlow<TabLayout.() -> Unit>()
+    // fix: ViewModel中不能持有高阶函数或者函数式接口的匿名类的引用，因为其中可能会持有Activity或者Fragment的引用，这样就会导致内存泄漏
     private val _user = MutableStateFlow<User?>(null)
 
-    val toolbarBus: SharedFlow<Toolbar.() -> Unit>
-        get() = _toolbarBus
-    val tabLayoutBus: SharedFlow<TabLayout.() -> Unit>
-        get() = _tabLayoutBus
     val user: StateFlow<User?>
         get() = _user
-
-    fun dispatchToolbarChange(event: Toolbar.() -> Unit) {
-        viewModelScope.launch {
-            _toolbarBus.emit(event)
-        }
-    }
-
-    fun dispatchTabLayoutChange(event: TabLayout.() -> Unit) {
-        viewModelScope.launch {
-            _tabLayoutBus.emit(event)
-        }
-    }
 
     fun getSelf() {
         viewModelScope.launch {

@@ -56,21 +56,17 @@ class RepositoryActivity : BaseVmBindActivity<RepoViewModel, ActivityRepoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         inject()
-//         动画相关
-//        transitionName?.let {
-//            binding.root.transitionName = it
-//        }
-//        postponeEnterTransition()
-//        val decorView = window.decorView
-//        window.decorView.viewTreeObserver.addOnPreDrawListener(object :
-//            ViewTreeObserver.OnPreDrawListener {
-//            override fun onPreDraw(): Boolean {
-//                decorView.viewTreeObserver.removeOnPreDrawListener(this)
-//                supportStartPostponedEnterTransition()
-//                return true
-//            }
-//        })
         window.enterTransition = buildEnterTransition()
+        postponeEnterTransition()
+        val decorView = window.decorView
+        window.decorView.viewTreeObserver.addOnPreDrawListener(object :
+            ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                decorView.viewTreeObserver.removeOnPreDrawListener(this)
+                supportStartPostponedEnterTransition()
+                return true
+            }
+        })
         viewModel.repo = repo
         viewModel.addToTrace()
         binding.apply {
